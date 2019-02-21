@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from ingredient import Ingredient
-from recipe import Recipe
+from recipe import RecipeBuilder
 
 
 class Scraper(object):
@@ -13,20 +13,21 @@ class Scraper(object):
         self.soup = BeautifulSoup(html, features=parser)
         self.recipe = None
 
+    def get_recipe(self):
+        if not self.recipe:
+            builder = RecipeBuilder()
+            builder.ingredients = self.get_ingredients()
+            builder.prep_time = self.get_time("prepTime")
+            builder.cook_time = self.get_time("cookTime")
+            builder.total_time = self.get_time("totalTime")
+            self.recipe = builder.create_recipe()
+        return self.recipe
+
     def get_ingredients(self):
         ingredient_spans = self.soup.find_all("span", itemprop="recipeIngredient")
         ingredient_texts = [span.text for span in ingredient_spans]
-        ingredients = Ingredient.convert(ingredient_texts)
+        ingredients = Ingredient.convert_to_ingredients(ingredient_texts)
         return ingredients
-
-    def get_recipe(self):
-        if not self.recipe:
-            ingredients = self.get_ingredients()
-            prep_time = self.get_time("prepTime")
-            cook_time = self.get_time("cookTime")
-            total_time = self.get_time("totalTime")
-            self.recipe = Recipe(ingredients)
-        return self.recipe
 
     def get_time(self, type):
         scalar_values = [1440, 60, 1]
@@ -34,5 +35,5 @@ class Scraper(object):
         prep_time_span = prep_time_div.find_all("span", class_="prepTime__item--time")
         prep_time_values = [int(span.text) for span in prep_time_span]
         scalar_values = scalar_values[-len(prep_time_span):]
-        time = sum([x*y for x,y in zip(scalar_values,prep_time_values)])
+        time = sum([x * y for x, y in zip(scalar_values, prep_time_values)])
         return time
