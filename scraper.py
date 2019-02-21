@@ -37,3 +37,18 @@ class Scraper(object):
         scalar_values = scalar_values[-len(prep_time_span):]
         time = sum([x * y for x, y in zip(scalar_values, prep_time_values)])
         return time
+
+    #This method gets all the directions for the recipes
+    def get_direction(self):
+
+        #check for span recipe-directions__list--item to get the direction items
+        direction_spans = self.soup.find("recipe-directions__list--item", itemprop="recipeInstructions")
+        print(directions)
+
+    def get_recipe_name(self):
+
+        #get all the text associated with the main content
+        main_ingrediants = self.soup.find(id_="recipe-main-content")
+
+        
+
