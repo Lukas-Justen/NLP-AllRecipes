@@ -4,3 +4,4 @@ url = "https://www.allrecipes.com/recipe/220643/ginas-creamy-mushroom-lasagna/?i
 
 scraper = Scraper(url)
 recipe = scraper.get_recipe()
+print(recipe)

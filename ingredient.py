@@ -2,7 +2,7 @@ class IngredientBuilder(object):
 
     def __init__(self):
         self.name = ""
-        self.quantity = 1
+        self.quantity = 1.0
         self.measurement = None
         self.descriptor = None
         self.preparation = None
