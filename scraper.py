@@ -43,3 +43,16 @@ class Scraper(object):
         servings_meta = self.soup.find("meta",id="metaRecipeServings")
         servings_count = float(servings_meta["content"])
         return servings_count
+
+    #This method gets all the directions for the recipes
+    def get_direction(self):
+        #check for span recipe-directions__list--item to get the direction items
+        direction_spans = self.soup.find("recipe-directions__list--item", itemprop="recipeInstructions")
+        print(directions)
+
+    def get_recipe_name(self):
+        #get all the text associated with the main content
+        main_ingrediants = self.soup.find(id_="recipe-main-content")
+
+        
+
