@@ -55,6 +55,7 @@ class Scraper(object):
         
         return direction_texts
 
+    #This method fetches the name of the recipe
     def get_recipe_name(self):
         #get all the text associated with the main content and extract the inner html
         main_ingrediants = self.soup.find(id="recipe-main-content").text
