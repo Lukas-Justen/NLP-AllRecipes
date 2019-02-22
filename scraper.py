@@ -16,13 +16,13 @@ class Scraper(object):
     def get_recipe(self):
         if not self.recipe:
             builder = RecipeBuilder()
+            builder.name = self.get_recipe_name()
             builder.ingredients = self.get_ingredients()
             builder.prep_time = self.get_time("prepTime")
             builder.cook_time = self.get_time("cookTime")
             builder.total_time = self.get_time("totalTime")
             builder.servings_count = self.get_servings_count()
-            builder.recipe_name = self.get_recipe_name()
-            builder.instructions =self.get_directions()
+            builder.directions = self.get_directions()
             self.recipe = builder.create_recipe()
 
         return self.recipe
