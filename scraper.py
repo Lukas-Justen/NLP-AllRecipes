@@ -21,6 +21,7 @@ class Scraper(object):
             builder.cook_time = self.get_time("cookTime")
             builder.total_time = self.get_time("totalTime")
             builder.servings_count = self.get_servings_count()
+            builder.recipe_name = self.get_recipe_name()
             self.recipe = builder.create_recipe()
         return self.recipe
 
@@ -51,8 +52,11 @@ class Scraper(object):
         print(directions)
 
     def get_recipe_name(self):
-        #get all the text associated with the main content
-        main_ingrediants = self.soup.find(id_="recipe-main-content")
+        #get all the text associated with the main content and extract the inner html
+        main_ingrediants = self.soup.find(id="recipe-main-content").text
+
+
+        return main_ingrediants
 
         
 
