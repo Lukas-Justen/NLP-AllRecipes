@@ -22,7 +22,9 @@ class Scraper(object):
             builder.total_time = self.get_time("totalTime")
             builder.servings_count = self.get_servings_count()
             builder.recipe_name = self.get_recipe_name()
+            builder.instructions =self.get_directions()
             self.recipe = builder.create_recipe()
+
         return self.recipe
 
     def get_ingredients(self):
@@ -46,10 +48,12 @@ class Scraper(object):
         return servings_count
 
     #This method gets all the directions for the recipes
-    def get_direction(self):
+    def get_directions(self):
         #check for span recipe-directions__list--item to get the direction items
-        direction_spans = self.soup.find("recipe-directions__list--item", itemprop="recipeInstructions")
-        print(directions)
+        direction_spans = self.soup.find_all("span", class_="recipe-directions__list--item")
+        direction_texts = [span.text for span in direction_spans]
+        
+        return direction_texts
 
     def get_recipe_name(self):
         #get all the text associated with the main content and extract the inner html
