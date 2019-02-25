@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 
 from ingredient import Ingredient
 from recipe import RecipeBuilder
+import re
 
 
 class Scraper(object):
@@ -11,6 +12,7 @@ class Scraper(object):
         r = requests.get(url)
         html = r.text
         self.soup = BeautifulSoup(html, features=parser)
+        self.sub_spaces = re.compile(r'\s+')
         self.recipe = None
 
     def get_recipe(self):
@@ -23,6 +25,7 @@ class Scraper(object):
             builder.total_time = self.get_time("totalTime")
             builder.servings_count = self.get_servings_count()
             builder.directions = self.get_directions()
+            builder.breadcrumbs = self.get_site_breadcrumbs()
             self.recipe = builder.create_recipe()
 
         return self.recipe
@@ -52,7 +55,6 @@ class Scraper(object):
         #check for span recipe-directions__list--item to get the direction items
         direction_spans = self.soup.find_all("span", class_="recipe-directions__list--item")
         direction_texts = [span.text for span in direction_spans]
-        
         return direction_texts
 
     #This method fetches the name of the recipe
@@ -60,8 +62,14 @@ class Scraper(object):
         #get all the text associated with the main content and extract the inner html
         main_ingrediants = self.soup.find(id="recipe-main-content").text
 
-
         return main_ingrediants
+
+    #This method gets the site breadcrumbs of what categories this recipe lives in
+    def get_site_breadcrumbs(self):
+        # get the breadcrumb categories the recipe lives in
+        breadcrumb_spans = self.soup.find_all("span", class_="toggle-similar__title")
+        breadcrumbs = [self.sub_spaces.sub(' ', span.text) for span in breadcrumb_spans]
+        return breadcrumbs
 
         
 
