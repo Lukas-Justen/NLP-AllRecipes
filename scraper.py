@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-from ingredient import Ingredient
+from ingredient import IngredientBuilder
 from recipe import RecipeBuilder
 import re
 
@@ -27,46 +27,44 @@ class Scraper(object):
             builder.directions = self.get_directions()
             builder.breadcrumbs = self.get_site_breadcrumbs()
             self.recipe = builder.create_recipe()
-
         return self.recipe
 
     def get_ingredients(self):
         ingredient_spans = self.soup.find_all("span", itemprop="recipeIngredient")
         ingredient_texts = [span.text for span in ingredient_spans]
-        ingredients = Ingredient.convert_to_ingredients(ingredient_texts)
+        ingredients = IngredientBuilder.convert_to_ingredients(ingredient_texts)
         return ingredients
 
     def get_time(self, type):
-        scalar_values = [1440.0, 60.0, 1.0]
-        prep_time_div = self.soup.find("time", itemprop=type)
-        prep_time_span = prep_time_div.find_all("span", class_="prepTime__item--time")
-        prep_time_values = [float(span.text) for span in prep_time_span]
-        scalar_values = scalar_values[-len(prep_time_span):]
-        time = sum([x * y for x, y in zip(scalar_values, prep_time_values)])
+        time = 0.0
+        try:
+            scalar_values = [1440.0, 60.0, 1.0]
+            prep_time_div = self.soup.find("time", itemprop=type)
+            prep_time_span = prep_time_div.find_all("span", class_="prepTime__item--time")
+            prep_time_values = [float(span.text) for span in prep_time_span]
+            scalar_values = scalar_values[-len(prep_time_span):]
+            time = sum([x * y for x, y in zip(scalar_values, prep_time_values)])
+        except:
+            print("Error: Could not read " + type + " from recipe.")
         return time
 
     def get_servings_count(self):
-        servings_meta = self.soup.find("meta",id="metaRecipeServings")
+        servings_meta = self.soup.find("meta", id="metaRecipeServings")
         servings_count = float(servings_meta["content"])
         return servings_count
 
-    #This method gets all the directions for the recipes
     def get_directions(self):
-        #check for span recipe-directions__list--item to get the direction items
         direction_spans = self.soup.find_all("span", class_="recipe-directions__list--item")
         direction_texts = [span.text for span in direction_spans]
+        direction_texts = [d.strip() for d in direction_texts if d != '']
         return direction_texts
 
-    #This method fetches the name of the recipe
     def get_recipe_name(self):
-        #get all the text associated with the main content and extract the inner html
-        main_ingrediants = self.soup.find(id="recipe-main-content").text
+        content_span = self.soup.find(id="recipe-main-content")
+        recipe_name = content_span.text
+        return recipe_name
 
-        return main_ingrediants
-
-    #This method gets the site breadcrumbs of what categories this recipe lives in
     def get_site_breadcrumbs(self):
-        # get the breadcrumb categories the recipe lives in
         breadcrumb_spans = self.soup.find_all("span", class_="toggle-similar__title")
         breadcrumbs = [self.sub_spaces.sub(' ', span.text) for span in breadcrumb_spans]
         return breadcrumbs
