@@ -1,9 +1,10 @@
+import re
+
 import requests
 from bs4 import BeautifulSoup
 
 from ingredient import IngredientBuilder
 from recipe import RecipeBuilder
-import re
 
 
 class Scraper(object):
@@ -68,6 +69,3 @@ class Scraper(object):
         breadcrumb_spans = self.soup.find_all("span", class_="toggle-similar__title")
         breadcrumbs = [self.sub_spaces.sub(' ', span.text) for span in breadcrumb_spans]
         return breadcrumbs
-
-        
-
