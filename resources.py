@@ -1,0 +1,1 @@
+MEATS = ['beef', 'steak', 'pork', 'chicken', '']
