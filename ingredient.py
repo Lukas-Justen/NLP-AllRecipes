@@ -1,3 +1,6 @@
+from tagging.utils import tag_ingredient_parts
+
+
 class IngredientBuilder(object):
 
     def __init__(self):
@@ -21,7 +24,11 @@ class IngredientBuilder(object):
         return Ingredient(self.name, self.quantity, self.measurement, self.descriptor, self.preparation, self.phrase)
 
     def convert(self, phrase):
-        # TODO: Add functionality for conversion to ingredient. Initialize attributes for class Ingredient.
+        taggings = tag_ingredient_parts(phrase)
+        self.quantity = taggings["qty"] if "qty" in taggings else self.quantity
+        self.measurement = taggings["unit"] if "unit" in taggings else self.quantity
+        self.name = taggings["name"] if "name" in taggings else self.quantity
+        self.preparation = taggings["comment"] if "comment" in taggings else self.preparation
         self.phrase = phrase
 
 
@@ -36,10 +43,10 @@ class Ingredient(object):
         self.phrase = phrase
 
     def __repr__(self):
-        representation =  (str(self.quantity) + " " if self.quantity else "") + \
-               (str(self.measurement) + " " if self.measurement else "") + \
-               (str(self.descriptor) + " " if self.descriptor else "") + \
-               (str(self.preparation) + " " if self.preparation else "") + \
+        representation =  (str(self.quantity) + ", " if self.quantity else "") + \
+               (str(self.measurement) + ", " if self.measurement else "") + \
+               (str(self.descriptor) + ", " if self.descriptor else "") + \
+               (str(self.preparation) + ", " if self.preparation else "") + \
                self.name
         return representation if representation != "" else self.phrase
 
