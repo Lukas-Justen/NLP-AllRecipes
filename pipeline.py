@@ -7,5 +7,6 @@ scraper = Scraper(url)
 database = Database()
 
 recipe = scraper.get_recipe()
+database.insert_recipe(recipe)
 
 print(recipe)

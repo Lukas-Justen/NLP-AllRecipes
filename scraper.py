@@ -67,5 +67,5 @@ class Scraper(object):
 
     def get_site_breadcrumbs(self):
         breadcrumb_spans = self.soup.find_all("span", class_="toggle-similar__title")
-        breadcrumbs = [self.sub_spaces.sub(' ', span.text) for span in breadcrumb_spans]
+        breadcrumbs = [self.sub_spaces.sub(' ', span.text).strip() for span in breadcrumb_spans]
         return breadcrumbs
