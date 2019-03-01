@@ -1,5 +1,5 @@
 import re
-
+import nltk
 
 class DirectionBuilder(object):
 
@@ -10,6 +10,7 @@ class DirectionBuilder(object):
         self.ingredients = []
         self.actions = []
         self.database = database
+        self.wordnet_lemmatizer = nltk.stem.WordNetLemmatizer()
 
     @staticmethod
     def convert_to_directions(direction_texts, database):
@@ -34,6 +35,7 @@ class DirectionBuilder(object):
         actions = self.database.find_actions()
         found = []
         for word in sentence.split():
+            word = self.wordnet_lemmatizer.lemmatize(word)
             if word in actions:
                 found.append(word)
         return found
@@ -42,6 +44,7 @@ class DirectionBuilder(object):
         tools = self.database.find_tools()
         found = []
         for word in sentence.split():
+            word = self.wordnet_lemmatizer.lemmatize(word)
             if word in tools:
                 found.append(word)
         return found
