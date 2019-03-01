@@ -1,4 +1,0 @@
-12	I1	L8	NoCAP	NoPAREN
-uncooked	I2	L8	NoCAP	NoPAREN
-lasagna	I3	L8	NoCAP	NoPAREN
-noodles	I4	L8	NoCAP	NoPAREN

@@ -3,7 +3,6 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
-from database import Database
 from direction import DirectionBuilder
 from ingredient import IngredientBuilder
 from recipe import RecipeBuilder
@@ -12,13 +11,14 @@ from recipe import RecipeBuilder
 
 class Scraper(object):
 
-    def __init__(self, url, parser="html.parser"):
+    def __init__(self, url, tools, actions, parser="html.parser"):
         r = requests.get(url)
         html = r.text
         self.soup = BeautifulSoup(html, features=parser)
         self.sub_spaces = re.compile(r'\s+')
         self.recipe = None
-        self.database = Database()
+        self.tools = tools
+        self.actions = actions
 
     def get_recipe(self):
         if not self.recipe:
@@ -29,7 +29,7 @@ class Scraper(object):
             builder.cook_time = self.get_time("cookTime")
             builder.total_time = self.get_time("totalTime")
             builder.servings_count = self.get_servings_count()
-            builder.directions = self.get_directions()
+            builder.directions = self.get_directions(builder.ingredients)
             builder.breadcrumbs = self.get_site_breadcrumbs()
             self.recipe = builder.create_recipe()
         return self.recipe
@@ -58,11 +58,11 @@ class Scraper(object):
         servings_count = float(servings_meta["content"])
         return servings_count
 
-    def get_directions(self):
+    def get_directions(self, ingredients):
         direction_spans = self.soup.find_all("span", class_="recipe-directions__list--item")
         direction_texts = [span.text for span in direction_spans]
         direction_texts = [d.strip() for d in direction_texts if d != '']
-        directions = DirectionBuilder.convert_to_directions(direction_texts,self.database)
+        directions = DirectionBuilder.convert_to_directions(direction_texts,self.tools,self.actions, ingredients)
         return directions
 
     def get_recipe_name(self):
@@ -75,15 +75,3 @@ class Scraper(object):
         breadcrumbs = [self.sub_spaces.sub(' ', span.text).strip() for span in breadcrumb_spans]
 
         return breadcrumbs
-
-    
-
-
-
-
-
-
-
-
-
-
