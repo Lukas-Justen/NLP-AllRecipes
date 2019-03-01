@@ -1,25 +1,27 @@
 import re
+
 import nltk
+
 
 class DirectionBuilder(object):
 
-    def __init__(self, database, recipe_ingredients):
+    def __init__(self, tools, actions, recipe_ingredients):
         self.time = None
         self.temperature = None
         self.tools = []
         self.ingredients = []
         self.actions = []
-        self.database = database
+        self.tools = tools
+        self.actions = actions
         self.recipe_ingredients = recipe_ingredients
         self.wordnet_lemmatizer = nltk.stem.WordNetLemmatizer()
 
-
     @staticmethod
-    def convert_to_directions(direction_texts, database, ingredients):
+    def convert_to_directions(direction_texts, tools, actions, ingredients):
         directions = []
         for phrase in direction_texts:
             for sentence in phrase.split(". "):
-                builder = DirectionBuilder(database, ingredients)
+                builder = DirectionBuilder(tools, actions, ingredients)
                 builder.convert(sentence)
                 directions.append(builder.create_direction())
         return directions
@@ -32,10 +34,10 @@ class DirectionBuilder(object):
         self.temperature = re.findall(r'\d+ degrees F \(\d+ degrees C\)', sentence)
         self.actions = self.parse_actions(sentence)
         self.tools = self.parse_tools(sentence)
-        self.ingredients = self.parse_ingredients(sentence,self.recipe_ingredients)
+        self.ingredients = self.parse_ingredients(sentence, self.recipe_ingredients)
 
     def parse_actions(self, sentence):
-        actions = self.database.find_actions()
+        actions = self.actions
         found = []
         for word in sentence.split():
             word = self.wordnet_lemmatizer.lemmatize(word)
@@ -44,7 +46,7 @@ class DirectionBuilder(object):
         return found
 
     def parse_tools(self, sentence):
-        tools = self.database.find_tools()
+        tools = self.tools
         found = []
         for word in sentence.split():
             word = self.wordnet_lemmatizer.lemmatize(word)
@@ -52,7 +54,7 @@ class DirectionBuilder(object):
                 found.append(word)
         return found
 
-    def parse_ingredients(self,sentence, recipe_ingredients):
+    def parse_ingredients(self, sentence, recipe_ingredients):
         ingredient_names = [r.name for r in recipe_ingredients]
         found = []
         for name in ingredient_names:
