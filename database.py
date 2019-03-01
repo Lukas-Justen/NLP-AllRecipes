@@ -29,8 +29,13 @@ class Database(object):
     	#return a list of actions
 
         actions_list = self.actions.find()
-        actions = [action for action in actions_list]
+        actions_dict = [dict for dict in actions_list]
 
+        #iterate through the actions dict to get the actions
+        actions = []
+        for dicts in actions_dict:
+        	actions.append(dicts['\ufeffActions'])
+        
         return actions
         
 
@@ -38,6 +43,11 @@ class Database(object):
         #Return a string list of actions
 
         tools_list = self.tools.find()
-        tools = [tool for tool in tools_list]
+        tools_dict = [dict for dict in tools_list]
+
+        tools = []
+        #iterate to get the tools
+        for dicts in tools_dict:
+        	tools.append(dicts['\ufeffTools'])
         
         return tools
