@@ -22,3 +22,9 @@ class Database(object):
     def find_recipe(self):
         recipe = self.recipes.find_one()
         return recipe
+
+    def find_actions(self):
+        pass
+
+    def find_tools(self):
+        pass
