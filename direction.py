@@ -3,20 +3,22 @@ import re
 
 class DirectionBuilder(object):
 
-    def __init__(self, database):
+    def __init__(self, database, recipe_ingredients):
         self.time = None
         self.temperature = None
         self.tools = []
         self.ingredients = []
         self.actions = []
         self.database = database
+        self.recipe_ingredients = recipe_ingredients
+
 
     @staticmethod
-    def convert_to_directions(direction_texts, database):
+    def convert_to_directions(direction_texts, database, ingredients):
         directions = []
         for phrase in direction_texts:
-            for sentence in phrase.split("."):
-                builder = DirectionBuilder(database)
+            for sentence in phrase.split(". "):
+                builder = DirectionBuilder(database, ingredients)
                 builder.convert(sentence)
                 directions.append(builder.create_direction())
         return directions
@@ -29,6 +31,7 @@ class DirectionBuilder(object):
         self.temperature = re.findall(r'\d+ degrees F \(\d+ degrees C\)', sentence)
         self.actions = self.parse_actions(sentence)
         self.tools = self.parse_tools(sentence)
+        self.ingredients = self.parse_ingredients(sentence,self.recipe_ingredients)
 
     def parse_actions(self, sentence):
         actions = self.database.find_actions()
@@ -44,6 +47,14 @@ class DirectionBuilder(object):
         for word in sentence.split():
             if word in tools:
                 found.append(word)
+        return found
+
+    def parse_ingredients(self,sentence, recipe_ingredients):
+        ingredient_names = [r.name for r in recipe_ingredients]
+        found = []
+        for name in ingredient_names:
+            if name in sentence:
+                found.append(name)
         return found
 
 

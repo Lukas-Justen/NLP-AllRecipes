@@ -28,7 +28,7 @@ class Scraper(object):
             builder.cook_time = self.get_time("cookTime")
             builder.total_time = self.get_time("totalTime")
             builder.servings_count = self.get_servings_count()
-            builder.directions = self.get_directions()
+            builder.directions = self.get_directions(builder.ingredients)
             builder.breadcrumbs = self.get_site_breadcrumbs()
             self.recipe = builder.create_recipe()
         return self.recipe
@@ -57,11 +57,11 @@ class Scraper(object):
         servings_count = float(servings_meta["content"])
         return servings_count
 
-    def get_directions(self):
+    def get_directions(self, ingredients):
         direction_spans = self.soup.find_all("span", class_="recipe-directions__list--item")
         direction_texts = [span.text for span in direction_spans]
         direction_texts = [d.strip() for d in direction_texts if d != '']
-        directions = DirectionBuilder.convert_to_directions(direction_texts,self.database)
+        directions = DirectionBuilder.convert_to_directions(direction_texts,self.database, ingredients)
         return directions
 
     def get_recipe_name(self):
