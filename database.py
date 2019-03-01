@@ -24,7 +24,9 @@ class Database(object):
         return recipe
 
     def find_actions(self):
+        # TODO : Return a string list of actions
         pass
 
     def find_tools(self):
+        # TODO : Return a string list of tools
         pass

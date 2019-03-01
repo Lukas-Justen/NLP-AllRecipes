@@ -3,6 +3,8 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
+from database import Database
+from direction import DirectionBuilder
 from ingredient import IngredientBuilder
 from recipe import RecipeBuilder
 
@@ -15,6 +17,7 @@ class Scraper(object):
         self.soup = BeautifulSoup(html, features=parser)
         self.sub_spaces = re.compile(r'\s+')
         self.recipe = None
+        self.database = Database()
 
     def get_recipe(self):
         if not self.recipe:
@@ -58,7 +61,8 @@ class Scraper(object):
         direction_spans = self.soup.find_all("span", class_="recipe-directions__list--item")
         direction_texts = [span.text for span in direction_spans]
         direction_texts = [d.strip() for d in direction_texts if d != '']
-        return direction_texts
+        directions = DirectionBuilder.convert_to_directions(direction_texts,self.database)
+        return directions
 
     def get_recipe_name(self):
         content_span = self.soup.find(id="recipe-main-content")
