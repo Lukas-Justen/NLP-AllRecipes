@@ -1,5 +1,5 @@
 import re
-
+import nltk
 
 class DirectionBuilder(object):
 
@@ -11,6 +11,7 @@ class DirectionBuilder(object):
         self.actions = []
         self.database = database
         self.recipe_ingredients = recipe_ingredients
+        self.wordnet_lemmatizer = nltk.stem.WordNetLemmatizer()
 
 
     @staticmethod
@@ -37,6 +38,7 @@ class DirectionBuilder(object):
         actions = self.database.find_actions()
         found = []
         for word in sentence.split():
+            word = self.wordnet_lemmatizer.lemmatize(word)
             if word in actions:
                 found.append(word)
         return found
@@ -45,6 +47,7 @@ class DirectionBuilder(object):
         tools = self.database.find_tools()
         found = []
         for word in sentence.split():
+            word = self.wordnet_lemmatizer.lemmatize(word)
             if word in tools:
                 found.append(word)
         return found
