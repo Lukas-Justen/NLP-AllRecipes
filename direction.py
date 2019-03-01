@@ -15,6 +15,7 @@ class DirectionBuilder(object):
         self.actions = actions
         self.recipe_ingredients = recipe_ingredients
         self.wordnet_lemmatizer = nltk.stem.WordNetLemmatizer()
+        self.stemming = nltk.porter.PorterStemmer()
 
     @staticmethod
     def convert_to_directions(direction_texts, tools, actions, ingredients):
@@ -41,6 +42,7 @@ class DirectionBuilder(object):
         found = []
         for word in sentence.split():
             word = self.wordnet_lemmatizer.lemmatize(word)
+            word = self.stemming.stem(word)
             if word in actions:
                 found.append(word)
         return found
@@ -50,12 +52,25 @@ class DirectionBuilder(object):
         found = []
         for word in sentence.split():
             word = self.wordnet_lemmatizer.lemmatize(word)
+            word = self.stemming.stem(word)
             if word in tools:
                 found.append(word)
         return found
 
     def parse_ingredients(self, sentence, recipe_ingredients):
         ingredient_names = [r.name for r in recipe_ingredients]
+
+        for r in ingredient_names:
+            if 'and' in r.split():
+                ingredient_names.remove(r)
+                r = r.split(' and ')
+                ingredient_names.extend(r)
+
+
+        sentence = sentence.spli()
+        sentence = [self.wordnet_lemmatizer.lemmatize(s) for s in sentence]
+        sentence = [self.stemming.stem(s) for s in sentence]
+
         found = []
         for name in ingredient_names:
             if name in sentence:
