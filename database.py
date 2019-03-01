@@ -13,6 +13,8 @@ class Database(object):
         client = pymongo.MongoClient(connection)
         self.all_recipes_db = client["AllRecipes"]
         self.recipes = self.all_recipes_db.recipes
+        self.tools = self.all_recipes_db.tools
+        self.actions = self.all_recipes_db.actions
 
     def insert_recipe(self, recipe):
         recipe_json = json.dumps(recipe, cls=RecipeEncoder)
@@ -24,9 +26,18 @@ class Database(object):
         return recipe
 
     def find_actions(self):
-        # TODO : Return a string list of actions
-        pass
+    	#return a list of actions
+
+        actions_list = self.actions.find()
+        actions = [action for action in actions_list]
+
+        return actions
+        
 
     def find_tools(self):
-        # TODO : Return a string list of tools
-        pass
+        #Return a string list of actions
+
+        tools_list = self.tools.find()
+        tools = [tool for tool in tools_list]
+        
+        return tools
