@@ -6,7 +6,6 @@ from bs4 import BeautifulSoup
 from direction import DirectionBuilder
 from ingredient import IngredientBuilder
 from recipe import RecipeBuilder
-# from seleniumscraper import SeleniumScraper
 
 
 class Scraper(object):
@@ -62,7 +61,7 @@ class Scraper(object):
         direction_spans = self.soup.find_all("span", class_="recipe-directions__list--item")
         direction_texts = [span.text for span in direction_spans]
         direction_texts = [d.strip() for d in direction_texts if d != '']
-        directions = DirectionBuilder.convert_to_directions(direction_texts,self.tools,self.actions, ingredients)
+        directions = DirectionBuilder.convert_to_directions(direction_texts, self.tools, self.actions, ingredients)
         return directions
 
     def get_recipe_name(self):

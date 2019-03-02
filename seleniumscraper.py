@@ -1,84 +1,61 @@
-import csv
 import time
 
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-import requests
-from bs4 import BeautifulSoup
-
-from scraper import Scraper
 
 class SeleniumScraper(object):
 
-	#url - the url you want to scrape - eg. persian recipe
-	def __init__(self,url, parser = "html.parser"):
+    def __init__(self, url):
+        self.url_scrapped = url
+        self.to_scrape = set()
 
-		#get the url
-		r = requests.get(url)
-		html = r.text
+    def scrape_urls(self):
+        path = "./chromedriver"
+        options = Options()
+        options.add_argument('--start-fullscreen')
+        options.add_argument('--disable-infobars')
 
-		#this is the url which we will be scraping for all the urls
-		self.url_scrapped = url
-		#these are all the set of urls we need to scrape through the 
-		self.to_scrape = set()
+        driver = webdriver.Chrome(chrome_options=options, executable_path=path)
+        driver.get(self.url_scrapped)
 
-        
+        last_height = driver.execute_script("return document.body.scrollHeight")
 
-		
-	#this scrapes the webpage for all the urls and appends it to the instance variable to_scrape
-	#This must be called before calling function get_urls_to_be_scraped
-	def scrape_urls(self):
-		path = "./chromedriver"
-		page = "https://www.allrecipes.com/recipes/15937/world-cuisine/middle-eastern/persian/"
-		options = Options()
-        # options.add_argument('--start-fullscreen')
-        # options.add_argument('--disable-infobars')
+        while True:
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(5)
+            res = driver.execute_script("return document.documentElement.outerHTML")
+            self.soup = BeautifulSoup(res, features="html.parser")
 
-		driver = webdriver.Chrome(chrome_options=options, executable_path=path)
-		driver.get(page)
+            btn = driver.find_element_by_id("btnMoreResults")
+            if btn and btn.is_displayed():
+                btn.click()
+                time.sleep(2)
+            urls_scrapped = self.get_urls()
 
-		
+            for ref in urls_scrapped:
+                self.to_scrape.add(ref)
 
-		for i in range(6):
-			res = driver.execute_script("return document.documentElement.outerHTML")
-			self.soup = BeautifulSoup(res, features="html.parser")
-			#instantiate the scraper object 
-			urls_scrapped = self.get_urls()
+            new_height = driver.execute_script("return document.body.scrollHeight")
+            if new_height == last_height:
+                break
+            last_height = new_height
 
-			for ref in urls_scrapped:
-				self.to_scrape.add(ref)
+    def get_urls_to_be_scraped(self):
+        return self.to_scrape
 
+    def get_urls(self):
+        urls = self.soup.find_all("article", class_="fixed-recipe-card")
+        urls_container = [u.find("div", class_="grid-card-image-container") for u in urls if u]
+        urls_isolated = [u.find("a", class_="ng-isolate-scope") for u in urls_container if u]
+        urls_isolated = [u for u in urls_isolated if u]
+        urls_scope = [u.find("a", class_="ng-scope") for u in urls_container if u]
+        urls_scope = [u for u in urls_scope if u]
+        urls = urls_isolated + urls_scope
 
-			time.sleep(1)
-			driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        ref = []
+        for u in urls:
+            ref.append(str(u['href']))
 
-			print("THE SET ",self.to_scrape)
-
-
-	#This returns the list of all the urls that need to be scraped
-	def get_urls_to_be_scraped(self):
-
-		return self.to_scrape
-		
-
-
-	#this method is used in the selenium scraper
-	def get_urls(self):
-		urls = self.soup.find_all("a",class_="ng-isolate-scope")
-
-		
-		ref = []
-
-		if urls is not None:
-
-			for u in urls:
-
-				if u is not None:
-
-					if "href" in u:
-
-						ref.append(u['href'])
-		print(ref)
-		return ref
+        return ref
