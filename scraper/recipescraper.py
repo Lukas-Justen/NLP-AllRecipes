@@ -3,25 +3,26 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
-from direction import DirectionBuilder
-from ingredient import IngredientBuilder
-from recipe import RecipeBuilder
+from datastructure.direction import DirectionBuilder
+from datastructure.ingredient import IngredientBuilder
+from datastructure.recipe import RecipeBuilder
 
 
-class Scraper(object):
+class RecipeScraper(object):
 
-    def __init__(self, url, tools, actions, parser="html.parser"):
+    def __init__(self, url, category, parser="html.parser"):
         r = requests.get(url)
         html = r.text
+        self.url = url
+        self.category = category
         self.soup = BeautifulSoup(html, features=parser)
         self.sub_spaces = re.compile(r'\s+')
         self.recipe = None
-        self.tools = tools
-        self.actions = actions
 
     def get_recipe(self):
         if not self.recipe:
             builder = RecipeBuilder()
+            builder.url = self.url
             builder.name = self.get_recipe_name()
             builder.ingredients = self.get_ingredients()
             builder.prep_time = self.get_time("prepTime")
@@ -30,6 +31,12 @@ class Scraper(object):
             builder.servings_count = self.get_servings_count()
             builder.directions = self.get_directions(builder.ingredients)
             builder.breadcrumbs = self.get_site_breadcrumbs()
+            builder.calories = self.get_nutrition("calories", "cal")
+            builder.fat = self.get_nutrition("fatContent", "g")
+            builder.carbohydrates = self.get_nutrition("carbohydrateContent", "g")
+            builder.protein = self.get_nutrition("proteinContent", "g")
+            builder.cholesterol = self.get_nutrition("cholesterolContent", "mg")
+            builder.sodium = self.get_nutrition("sodiumContent", "mg")
             self.recipe = builder.create_recipe()
         return self.recipe
 
@@ -49,7 +56,8 @@ class Scraper(object):
             scalar_values = scalar_values[-len(prep_time_span):]
             time = sum([x * y for x, y in zip(scalar_values, prep_time_values)])
         except:
-            print("Error: Could not read " + type + " from recipe.")
+            pass
+            # print("Error: Could not read " + type + " from recipe.")
         return time
 
     def get_servings_count(self):
@@ -61,7 +69,7 @@ class Scraper(object):
         direction_spans = self.soup.find_all("span", class_="recipe-directions__list--item")
         direction_texts = [span.text for span in direction_spans]
         direction_texts = [d.strip() for d in direction_texts if d != '']
-        directions = DirectionBuilder.convert_to_directions(direction_texts, self.tools, self.actions, ingredients)
+        directions = DirectionBuilder.convert_to_directions(direction_texts, ingredients)
         return directions
 
     def get_recipe_name(self):
@@ -71,6 +79,18 @@ class Scraper(object):
 
     def get_site_breadcrumbs(self):
         breadcrumb_spans = self.soup.find_all("span", class_="toggle-similar__title")
-        breadcrumbs = [self.sub_spaces.sub(' ', span.text).strip() for span in breadcrumb_spans]
+        breadcrumbs = set([self.sub_spaces.sub(' ', span.text).strip() for span in breadcrumb_spans])
+        breadcrumbs.add(self.category)
+        return list(breadcrumbs)
 
-        return breadcrumbs
+    def get_nutrition(self, name, unit):
+        value = 0.0
+        try:
+            html_span = self.soup.find("span", itemprop=name)
+            match = re.findall(r'[\d.,]+', html_span.text)
+            if match:
+                value = float(match[0])
+        except:
+            # print("Error: Could not read " + name + " from recipe.")
+            pass
+        return {"value": value, "unit": unit}

@@ -2,30 +2,30 @@ import re
 
 import nltk
 
+from datastructure.resources import actions, tools
+
 
 class DirectionBuilder(object):
 
-    def __init__(self, tools, actions, recipe_ingredients, stopwords):
+    def __init__(self, recipe_ingredients, stopwords):
         self.time = None
         self.temperature = None
         self.tools = []
         self.ingredients = []
         self.actions = []
-        self.tools = tools
-        self.actions = actions
-        self.recipe_ingredients = recipe_ingredients
+        self.recipe_ingredients = [r.name for r in recipe_ingredients]
         self.wordnet_lemmatizer = nltk.stem.WordNetLemmatizer()
         self.stemming = nltk.porter.PorterStemmer()
         self.stopwords = stopwords
         self.phrase = ""
 
     @staticmethod
-    def convert_to_directions(direction_texts, tools, actions, ingredients):
+    def convert_to_directions(direction_texts, ingredients):
         directions = []
         stopwords = nltk.corpus.stopwords.words('english')
         for phrase in direction_texts:
             for sentence in phrase.split(". "):
-                builder = DirectionBuilder(tools, actions, ingredients, stopwords)
+                builder = DirectionBuilder(ingredients, stopwords)
                 builder.convert(sentence)
                 directions.append(builder.create_direction())
         return directions
@@ -34,36 +34,39 @@ class DirectionBuilder(object):
         return Direction(self.time, self.temperature, self.tools, self.ingredients, self.actions,self.phrase)
 
     def convert(self, sentence):
-        self.time = re.findall(r'(\d+ to \d+|[\d\s/ ]+) (minutes|hours|minute|hour|seconds|second)', sentence)
-        self.temperature = re.findall(r'\d+ degrees F \(\d+ degrees C\)', sentence)
+        sentence = sentence.lower()
+        time_match = re.findall(r'(?:\d+ to \d+|\d[\d\s/., ]*) (?:minutes|hours|minute|hour|seconds|second)', sentence)
+        temp_match = re.findall(r'\d+ degrees F \(\d+ degrees C\)', sentence)
+        self.time = time_match[0] if time_match else ""
+        self.temperature = temp_match[0] if temp_match else ""
         self.actions = self.parse_actions(sentence)
         self.tools = self.parse_tools(sentence)
         self.ingredients = self.parse_ingredients(sentence, self.recipe_ingredients)
         self.phrase = sentence
 
     def parse_actions(self, sentence):
-        actions = self.actions
-        found = []
-        for word in sentence.split():
-            word = self.wordnet_lemmatizer.lemmatize(word)
-            word = self.stemming.stem(word)
-            if word in actions:
-                found.append(word)
-        return found
+        found = set()
+        sentence = sentence.lower()
+        words = [w for w in sentence.split() if w not in self.stopwords]
+        for word in words:
+            for action in actions:
+                if str(word).startswith(action):
+                    found.add(action)
+                    break
+        return list(found)
 
     def parse_tools(self, sentence):
-        tools = self.tools
-        found = []
-        for word in sentence.split():
-            word = self.wordnet_lemmatizer.lemmatize(word)
-            word = self.stemming.stem(word)
-            if word in tools:
-                found.append(word)
-        return found
+        found = set()
+        sentence = sentence.lower()
+        words = [w for w in sentence.split() if w not in self.stopwords]
+        for word in words:
+            for tool in tools:
+                if str(tool).startswith(word) and abs(len(tool) - len(word)) <= 4:
+                    found.add(tool)
+                    break
+        return list(found)
 
-    def parse_ingredients(self, sentence, recipe_ingredients):
-        ingredient_names = [r.name for r in recipe_ingredients]
-
+    def parse_ingredients(self, sentence, ingredient_names):
         for r in ingredient_names:
             ingredient_names.remove(r)
             ingredient_names.extend(r.split(' and '))

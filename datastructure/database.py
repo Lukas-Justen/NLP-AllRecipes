@@ -3,7 +3,7 @@ import json
 import pymongo
 from bson import json_util
 
-from recipe import RecipeEncoder
+from datastructure.recipe import RecipeEncoder
 
 
 class Database(object):

@@ -1,22 +1,18 @@
-from database import Database
+from scraper.recipescraper import RecipeScraper
+from datastructure.resources import database
+from scraper.seleniumscraper import SeleniumScraper
 
-from scraper import Scraper
-from seleniumscraper import SeleniumScraper
-
-url = "https://www.allrecipes.com/recipes/15937/world-cuisine/middle-eastern/persian/"
+url = "https://www.allrecipes.com/recipes/87/everyday-cooking/vegetarian/?internalSource=hubcard&referringContentType=Search&clickId=cardslot%201&page=2"
+category = "Vegetarian"
 
 scraper = SeleniumScraper(url)
 scraper.scrape_urls()
 urls = scraper.get_urls_to_be_scraped()
 
-database = Database()
-tools = database.find_tools()
-actions = database.find_actions()
-recipes = []
+print(len(urls))
 
 for u in urls:
-    scraper = Scraper(u,tools,actions)
-    recipes.append(scraper.get_recipe())
-
-print(len(recipes))
-print(recipes)
+    print("Scraping: " + u)
+    scraper = RecipeScraper(u, category)
+    recipe = scraper.get_recipe()
+    database.insert_recipe(recipe)

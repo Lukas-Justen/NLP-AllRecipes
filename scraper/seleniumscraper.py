@@ -22,7 +22,8 @@ class SeleniumScraper(object):
 
         last_height = driver.execute_script("return document.body.scrollHeight")
 
-        while True:
+        while len(self.to_scrape) <= 100:
+            print(len(self.to_scrape))
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             time.sleep(5)
             res = driver.execute_script("return document.documentElement.outerHTML")

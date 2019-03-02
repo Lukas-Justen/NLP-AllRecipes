@@ -1,3 +1,5 @@
+import re
+
 from tagging.utils import tag_ingredient_parts
 
 
@@ -24,12 +26,20 @@ class IngredientBuilder(object):
         return Ingredient(self.name, self.quantity, self.measurement, self.descriptor, self.preparation, self.phrase)
 
     def convert(self, phrase):
+        phrase = re.sub(r'\(.*\)', " ", phrase)
         taggings = tag_ingredient_parts(phrase)
         self.quantity = taggings["qty"] if "qty" in taggings else self.quantity
-        self.measurement = taggings["unit"] if "unit" in taggings else self.quantity
+        self.measurement = self.strip_value(taggings["unit"] if "unit" in taggings else self.quantity)
         self.name = taggings["name"] if "name" in taggings else self.quantity
-        self.preparation = taggings["comment"] if "comment" in taggings else self.preparation
+        self.preparation = self.strip_value(taggings["comment"] if "comment" in taggings else self.preparation)
         self.phrase = phrase
+
+    def strip_value(self, value):
+        if value != None:
+            value = re.sub(r'[.,\s\d]+', " ", str(value))
+            value = str(value).strip()
+            value = value if value != "" else None
+        return value
 
 
 class Ingredient(object):
