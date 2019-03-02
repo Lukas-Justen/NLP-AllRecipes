@@ -9,7 +9,7 @@ actions = database.find_actions()
 scraper = Scraper(url,tools,actions)
 
 recipe = scraper.get_recipe()
-recipe
-# database.insert_recipe(recipe)
+print(recipe)
+database.insert_recipe(recipe)
 
 # database.find_tools()

@@ -45,7 +45,7 @@ class Recipe(object):
         direction_string = ""
         counter = 1
         for direction in self.directions:
-            direction_string += str(counter) + ".  " + direction + "\n"
+            direction_string += str(counter) + ".  " + direction.__repr__() + "\n"
             counter += 1
         return "Recipe Name: " + str(self.name)+ "\n\n"\
                "Breadcrumbs: " + str(self.breadcrumbs) + "\n" \
