@@ -1,0 +1,15 @@
+*REPLACE*
+%cheeses% > green onion
+heavy cream > light cream
+chicken broth, beef broth, vegetable broth, veggie broth > water
+butter > margarine
+chicken thigh > chicken breast
+egg > egg white
+whole milk > skim milk
+bacon > avocado
+*SCALE*
+oil, olive oil, sesame oil, canola oil, peanut oil, soybean oil > 0.5
+vegetable oil > 0.5
+salt > 0.5
+margarine > 0.5
+sauce > 0.5

@@ -1,0 +1,10 @@
+*REPLACE*
+oil, olive oil, sesame oil, canola oil, peanut oil, soybean oil, butter, cooking spray > lard, pork fat, butter
+chicken > chicken thigh
+milk > whole milk
+lean > fatty
+*SCALE*
+lard, pork fat > 2
+salt > 2
+%cheeses% > 2
+sauce >2
