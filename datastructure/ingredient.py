@@ -1,4 +1,5 @@
 import re
+from copy import deepcopy
 
 from tagging.utils import tag_ingredient_parts
 
@@ -19,7 +20,12 @@ class IngredientBuilder(object):
         for phrase in ingredient_texts:
             builder = IngredientBuilder()
             builder.convert(phrase)
-            ingredients.append(builder.create_ingredient())
+            ingredient = builder.create_ingredient()
+            splitted_ingredient_names = str(ingredient.name).split(" and ")
+            for split in splitted_ingredient_names:
+                new_ingredient = deepcopy(ingredient)
+                new_ingredient.name = split
+                ingredients.append(new_ingredient)
         return ingredients
 
     def create_ingredient(self):
@@ -28,11 +34,11 @@ class IngredientBuilder(object):
     def convert(self, phrase):
         phrase = re.sub(r'\(.*\)', " ", phrase)
         taggings = tag_ingredient_parts(phrase)
-        self.quantity = taggings["qty"] if "qty" in taggings else self.quantity
-        self.measurement = self.strip_value(taggings["unit"] if "unit" in taggings else self.quantity)
-        self.name = taggings["name"] if "name" in taggings else self.quantity
-        self.preparation = self.strip_value(taggings["comment"] if "comment" in taggings else self.preparation)
-        self.phrase = phrase
+        self.quantity = str(taggings["qty"] if "qty" in taggings else self.quantity).lower()
+        self.measurement = str(self.strip_value(taggings["unit"] if "unit" in taggings else self.quantity)).lower()
+        self.name = str(taggings["name"] if "name" in taggings else self.quantity).lower()
+        self.preparation = str(self.strip_value(taggings["comment"] if "comment" in taggings else self.preparation)).lower()
+        self.phrase = str(phrase).lower()
 
     def strip_value(self, value):
         if value != None:

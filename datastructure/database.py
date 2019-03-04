@@ -15,6 +15,13 @@ class Database(object):
         self.recipes = self.all_recipes_db.recipes
         self.tools = self.all_recipes_db.tools
         self.actions = self.all_recipes_db.actions
+        self.ingredient_types = {
+            "meats" : self.all_recipes_db.meats,
+            "seafood": self.all_recipes_db.seafood,
+            "poultry": self.all_recipes_db.poultry,
+            "shellfish": self.all_recipes_db.shellfish,
+            "vegetarian": self.all_recipes_db.vegetarian
+        }
 
     def insert_recipe(self, recipe):
         recipe_json = json.dumps(recipe, cls=RecipeEncoder)
@@ -26,28 +33,26 @@ class Database(object):
         return recipe
 
     def find_actions(self):
-    	#return a list of actions
-
         actions_list = self.actions.find()
         actions_dict = [dict for dict in actions_list]
-
-        #iterate through the actions dict to get the actions
         actions = []
         for dicts in actions_dict:
-        	actions.append(dicts['\ufeffActions'])
-        
+            actions.append(dicts['\ufeffActions'])
         return actions
-        
 
     def find_tools(self):
-        #Return a string list of actions
-
         tools_list = self.tools.find()
         tools_dict = [dict for dict in tools_list]
-
         tools = []
-        #iterate to get the tools
         for dicts in tools_dict:
-        	tools.append(dicts['\ufeffTools'])
-        
+            tools.append(dicts['\ufeffTools'])
         return tools
+
+    def find_ingredient_types(self, types):
+        dict_list = []
+        for type in types:
+            dict_list.extend([item for item in self.ingredient_types[type].find()])
+        items = []
+        for dict in dict_list:
+            items.append(dict['name'])
+        return items

@@ -56,8 +56,7 @@ class RecipeScraper(object):
             scalar_values = scalar_values[-len(prep_time_span):]
             time = sum([x * y for x, y in zip(scalar_values, prep_time_values)])
         except:
-            pass
-            # print("Error: Could not read " + type + " from recipe.")
+            print("Error: Could not read " + type + " from recipe.")
         return time
 
     def get_servings_count(self):
@@ -91,6 +90,5 @@ class RecipeScraper(object):
             if match:
                 value = float(match[0])
         except:
-            # print("Error: Could not read " + name + " from recipe.")
-            pass
+            print("Error: Could not read " + name + " from recipe.")
         return {"value": value, "unit": unit}

@@ -1,4 +1,6 @@
 import json
+import random
+import re
 
 from datastructure.ingredient import Ingredient
 
@@ -58,6 +60,7 @@ class Recipe(object):
         self.protein = protein
         self.cholesterol = cholesterol
         self.sodium = sodium
+        self.variable_finder = re.compile(r'%(?P<variable_name>.+)%')
 
     def __str__(self):
         ingredient_string = ""
@@ -83,6 +86,73 @@ class Recipe(object):
                "Sodium     : " + str(self.sodium)+ "\n\n"\
                "Ingredients: \n" + ingredient_string + "\n"\
                "Directions : \n" + direction_string
+
+    def convert(self, template_file, variables):
+        template = {"REPLACE":[], "ADD": [], "SCALE": []}
+        mode = ""
+        with open(template_file) as fp:
+            lines = fp.readlines()
+        for line in lines:
+            line = line.replace("\n", "")
+            if line.startswith("*"):
+                mode = line.replace("*", "")
+            else:
+                line = self.insert_variables(line,variables)
+                parts = line.split(" > ")
+                if mode == "REPLACE":
+                    from_ingredients = str(parts[0]).strip().split(", ")
+                    to_ingredients = str(parts[1]).strip().split(", ")
+                    replacement_dict = {"from":from_ingredients, "to": to_ingredients}
+                    template[mode].append(replacement_dict)
+                elif mode == "ADD":
+                    to_add = str(parts[0]).strip().split(", ")
+                    number = int(str(parts[1]).strip())
+                    where = str(parts[2]).strip()
+                    template["ADD"].append({"add": to_add, "number": number, "where": where})
+                else:
+                    ingredient = str(parts[0]).strip()
+                    scale = float(str(parts[1]).strip())
+                    template["SCALE"].append({"ingredient":ingredient, "scale":scale})
+        self.replace(template["REPLACE"])
+        self.add(template["ADD"])
+        self.scale(template["SCALE"])
+
+    def insert_variables(self, line, variables):
+        matches = self.variable_finder.findall(line)
+        for match in matches:
+            variable_name = str(match.group("variable_name"))
+            line = line.replace("%" + variable_name + "%", variables[variable_name])
+        return line
+
+    def replace(self, list_of_replacements):
+        for replacement in list_of_replacements:
+            from_types = replacement["from"]
+            to_types = replacement["to"]
+            for type in from_types:
+                for ingredient in self.ingredients:
+                    if self.simple_match(type,ingredient.name):
+                        replace_with = random.choice(to_types)
+                        to_types.remove(replace_with)
+                        ingredient.phrase = str(ingredient.phrase).replace(ingredient.name, replace_with)
+                        self.replace_direction(ingredient.name, replace_with)
+                        ingredient.name = replace_with
+
+    def simple_match(self, ingredient_from_list,ingredient_in_recipe):
+        return ingredient_from_list in ingredient_in_recipe
+
+    def replace_direction(self, from_name, to_name):
+        for direction in self.directions:
+            if from_name in direction.ingredients:
+                direction.ingredients = [w if w != from_name else to_name for w in direction.ingredients]
+                direction.phrase = str(direction.phrase).replace(from_name, to_name)
+
+    def add(self, list_of_additions):
+        pass
+
+    def scale(self, list_of_scalings):
+        pass
+
+
 
 
 class RecipeEncoder(json.JSONEncoder):

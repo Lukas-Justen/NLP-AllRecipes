@@ -37,12 +37,12 @@ class DirectionBuilder(object):
         sentence = sentence.lower()
         time_match = re.findall(r'(?:\d+ to \d+|\d[\d\s/., ]*) (?:minutes|hours|minute|hour|seconds|second)', sentence)
         temp_match = re.findall(r'\d+ degrees F \(\d+ degrees C\)', sentence)
-        self.time = time_match[0] if time_match else ""
-        self.temperature = temp_match[0] if temp_match else ""
+        self.phrase = sentence
+        self.time = str(time_match[0] if time_match else "").lower()
+        self.temperature = str(temp_match[0] if temp_match else "").lower()
         self.actions = self.parse_actions(sentence)
         self.tools = self.parse_tools(sentence)
         self.ingredients = self.parse_ingredients(sentence, self.recipe_ingredients)
-        self.phrase = sentence
 
     def parse_actions(self, sentence):
         found = set()
@@ -67,10 +67,8 @@ class DirectionBuilder(object):
         return list(found)
 
     def parse_ingredients(self, sentence, ingredient_names):
-        for r in ingredient_names:
-            ingredient_names.remove(r)
-            ingredient_names.extend(r.split(' and '))
-
+        new_sentence = sentence
+        second_match = []
         found = set()
         for name in ingredient_names:
             if name in sentence:
@@ -88,8 +86,15 @@ class DirectionBuilder(object):
         for word in words:
             for name in ingredient_names:
                 if len(word) >= 3 and word in name:
+                    if word in second_match:
+                        new_sentence = new_sentence.replace(word, "")
+                    else:
+                        second_match.append(word)
+                        new_sentence = new_sentence.replace(word, name)
                     found.add(name)
 
+        new_sentence = new_sentence.replace("  ", " ")
+        self.phrase = new_sentence
         return list(found)
 
 
