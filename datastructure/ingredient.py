@@ -33,11 +33,12 @@ class IngredientBuilder(object):
 
     def convert(self, phrase):
         phrase = re.sub(r'\(.*\)', " ", phrase)
+        phrase = phrase.lower()
         taggings = tag_ingredient_parts(phrase)
-        self.quantity = str(taggings["qty"] if "qty" in taggings else self.quantity).lower()
-        self.measurement = str(self.strip_value(taggings["unit"] if "unit" in taggings else self.quantity)).lower()
-        self.name = str(taggings["name"] if "name" in taggings else self.quantity).lower()
-        self.preparation = str(self.strip_value(taggings["comment"] if "comment" in taggings else self.preparation)).lower()
+        self.quantity = taggings["qty"] if "qty" in taggings else self.quantity
+        self.measurement = self.strip_value(taggings["unit"] if "unit" in taggings else self.quantity)
+        self.name = taggings["name"] if "name" in taggings else self.quantity
+        self.descriptor = self.strip_value(taggings["comment"] if "comment" in taggings else self.preparation)
         self.phrase = str(phrase).lower()
 
     def strip_value(self, value):
@@ -59,11 +60,12 @@ class Ingredient(object):
         self.phrase = phrase
 
     def __repr__(self):
-        representation =  (str(self.quantity) + ", " if self.quantity else "") + \
-               (str(self.measurement) + ", " if self.measurement else "") + \
-               (str(self.descriptor) + ", " if self.descriptor else "") + \
-               (str(self.preparation) + ", " if self.preparation else "") + \
-               self.name
+        representation =  str(self.phrase) + "\t\t\t" + \
+               ("Q: " + str(self.quantity) + ", " if self.quantity else "") + \
+               ("M: " + str(self.measurement) + ", " if self.measurement else "") + \
+               ("D: " + str(self.descriptor) + ", " if self.descriptor else "") + \
+               ("P: " + str(self.preparation) + ", " if self.preparation else "") + \
+               "Name: " + self.name
         return representation if representation != "" else self.phrase
 
     def __str__(self):

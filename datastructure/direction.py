@@ -36,7 +36,7 @@ class DirectionBuilder(object):
     def convert(self, sentence):
         sentence = sentence.lower()
         time_match = re.findall(r'(?:\d+ to \d+|\d[\d\s/., ]*) (?:minutes|hours|minute|hour|seconds|second)', sentence)
-        temp_match = re.findall(r'\d+ degrees F \(\d+ degrees C\)', sentence)
+        temp_match = re.findall(r'\d+ degrees f \(\d+ degrees c\)', sentence)
         self.phrase = sentence
         self.time = str(time_match[0] if time_match else "").lower()
         self.temperature = str(temp_match[0] if temp_match else "").lower()

@@ -2,6 +2,8 @@ import json
 import random
 import re
 
+from tabulate import tabulate
+
 from datastructure.ingredient import Ingredient
 
 
@@ -63,13 +65,13 @@ class Recipe(object):
         self.variable_finder = re.compile(r'%(?P<variable_name>.+)%')
 
     def __str__(self):
-        ingredient_string = ""
+        table_ingredients = []
         for ingredient in self.ingredients:
-            ingredient_string += ingredient.__repr__() + "\n"
-        direction_string = ""
+            table_ingredients.append([ingredient.quantity, ingredient.measurement, ingredient.descriptor, ingredient.name, ingredient.phrase])
+        table_directions = []
         counter = 1
         for direction in self.directions:
-            direction_string += str(counter) + ".  " + direction.__repr__() + "\n"
+            table_directions.append([counter, direction.tools,direction.actions, direction.ingredients, direction.time, direction.temperature, direction.phrase])
             counter += 1
         return "Recipe Name: " + str(self.name)+ "\n" \
                "Url        : " + str(self.url) + "\n\n" \
@@ -84,8 +86,8 @@ class Recipe(object):
                "Protein    : " + str(self.protein)+ "\n"\
                "Cholesterol: " + str(self.cholesterol)+ "\n"\
                "Sodium     : " + str(self.sodium)+ "\n\n"\
-               "Ingredients: \n" + ingredient_string + "\n"\
-               "Directions : \n" + direction_string
+               "\n\n" + tabulate(table_ingredients, headers=['Quantity', 'Measurement', "Descriptor", "Name", "Phrase"]) + "\n"\
+               "\n\n" + tabulate(table_directions, headers=["Step", "Tools", "Actions", "Ingredients", "Time","Temperature", "Phrase"])
 
     def convert(self, template_file, variables):
         template = {"REPLACE":[], "ADD": [], "SCALE": []}
@@ -132,7 +134,8 @@ class Recipe(object):
                 for ingredient in self.ingredients:
                     if self.simple_match(type,ingredient.name):
                         replace_with = random.choice(to_types)
-                        to_types.remove(replace_with)
+                        if len(to_types) > 1:
+                            to_types.remove(replace_with)
                         ingredient.phrase = str(ingredient.phrase).replace(ingredient.name, replace_with)
                         self.replace_direction(ingredient.name, replace_with)
                         ingredient.name = replace_with
