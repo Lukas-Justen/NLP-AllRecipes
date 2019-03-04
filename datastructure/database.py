@@ -20,7 +20,14 @@ class Database(object):
             "seafood": self.all_recipes_db.seafood,
             "poultry": self.all_recipes_db.poultry,
             "shellfish": self.all_recipes_db.shellfish,
-            "vegetarian": self.all_recipes_db.vegetarian
+            "vegetarian": self.all_recipes_db.vegetarian,
+            "legumes" : self.all_recipes_db.legumes,
+            "fruits": self.all_recipes_db.fruits,
+            "cheeses": self.all_recipes_db.cheeses,
+            "grains": self.all_recipes_db.grains,
+            "noodles": self.all_recipes_db.noodles,
+            "nuts": self.all_recipes_db.nuts,
+            "vegetables": self.all_recipes_db.vegetables,
         }
 
     def insert_recipe(self, recipe):
@@ -49,10 +56,11 @@ class Database(object):
         return tools
 
     def find_ingredient_types(self, types):
-        dict_list = []
+        dictionary = {}
         for type in types:
-            dict_list.extend([item for item in self.ingredient_types[type].find()])
-        items = []
-        for dict in dict_list:
-            items.append(dict['name'])
-        return items
+            list_ingredients = [item for item in self.ingredient_types[type].find()]
+            string = ""
+            for i in list_ingredients:
+                string += i['name'] + ", "
+            dictionary[type] = string[:-2]
+        return dictionary
