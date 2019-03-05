@@ -4,7 +4,10 @@
 %shellfish% > crab, prawn, lobster
 %noodles% > hakka noodles
 %nuts% > almond, peanut, groundnut, pistachios, cashew
-%vegetables% > beetroot, cabbage, mushrooms, pea pods, spinach, cauliflower, brinjal, radish, 
+%vegetables% > beetroot, cabbage, mushrooms, pea pods, spinach, cauliflower, brinjal, radish
+
+
+
 eggplant > brinjal
 bell peppers, peppers > capsicum
 roots > taro, sweet potato,
