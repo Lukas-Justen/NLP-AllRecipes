@@ -1,7 +1,6 @@
 *REPLACE*
 %cheeses% > fennel
 %meats% > pork, chicken, duck, beef
-%herbs% > ginger, sichuan pepper, anise, garlic
 pasta > vermicelli
 %fruits% > passion fruit, dragonfruit, asian pear
 olive oil > 

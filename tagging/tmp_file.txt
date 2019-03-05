@@ -1,4 +1,0 @@
-1	I1	L8	NoCAP	NoPAREN
-package	I2	L8	NoCAP	NoPAREN
-penne	I3	L8	NoCAP	NoPAREN
-pasta	I4	L8	NoCAP	NoPAREN

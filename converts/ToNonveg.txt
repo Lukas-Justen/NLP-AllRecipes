@@ -1,0 +1,10 @@
+*REPLACE*
+%legumes% > %meats%
+%vegetarian% > %meats%
+egg, eggplant, mushrooms >  %meats%
+spinach > %meats%
+coconut milk > chicken broth
+hemp milk > beef broth
+garlic sauce > oyster sauce
+zucchini > meatballs
+vinegar > fish sauce

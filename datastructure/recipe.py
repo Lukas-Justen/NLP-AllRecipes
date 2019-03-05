@@ -4,7 +4,7 @@ import re
 
 from tabulate import tabulate
 
-from datastructure.ingredient import Ingredient
+from datastructure.ingredient import Ingredient, IngredientBuilder
 
 
 class RecipeBuilder(object):
@@ -62,7 +62,7 @@ class Recipe(object):
         self.protein = protein
         self.cholesterol = cholesterol
         self.sodium = sodium
-        self.variable_finder = re.compile(r'%(?P<variable_name>.+)%')
+        self.variable_finder = re.compile(r'%(?P<variable_name>\w+)%')
 
     def __str__(self):
         table_ingredients = []
@@ -108,9 +108,10 @@ class Recipe(object):
                     template[mode].append(replacement_dict)
                 elif mode == "ADD":
                     to_add = str(parts[0]).strip().split(", ")
-                    number = int(str(parts[1]).strip())
-                    where = str(parts[2]).strip()
-                    template["ADD"].append({"add": to_add, "number": number, "where": where})
+                    where = str(parts[1]).strip().split(", ")
+                    quantity = float(str(parts[2]).strip())
+                    measurement = str(parts[3]).strip()
+                    template["ADD"].append({"add": to_add, "where": where, "quantity": quantity,"measurement": measurement})
                 else:
                     ingredient = str(parts[0]).strip()
                     scale = float(str(parts[1]).strip())
@@ -122,8 +123,7 @@ class Recipe(object):
     def insert_variables(self, line, variables):
         matches = self.variable_finder.findall(line)
         for match in matches:
-            variable_name = str(match.group("variable_name"))
-            line = line.replace("%" + variable_name + "%", variables[variable_name])
+            line = line.replace("%" + match + "%", variables[match])
         return line
 
     def replace(self, list_of_replacements):
@@ -150,7 +150,24 @@ class Recipe(object):
                 direction.phrase = str(direction.phrase).replace(from_name, to_name)
 
     def add(self, list_of_additions):
-        pass
+        for addition in list_of_additions:
+            added = False
+            for direction in self.directions:
+                possible_actions = addition["where"]
+                for action in possible_actions:
+                    if not added and action in direction.actions:
+                        to_add = random.choice(addition["add"])
+                        builder = IngredientBuilder()
+                        builder.name = to_add
+                        builder.quantity = addition["quantity"] * self.servings_count
+                        builder.measurement = addition["measurement"]
+                        builder.phrase = str(builder.quantity) + " " + str(builder.measurement) + " " + builder.name
+                        self.ingredients.append(builder.create_ingredient())
+                        if direction.ingredients:
+                            direction.ingredients.append(to_add)
+                            old_ingredient = direction.ingredients[0]
+                            direction.phrase = str(direction.phrase).replace(old_ingredient, old_ingredient + ", " + to_add)
+                        added = True
 
     def scale(self, list_of_scalings):
         pass
