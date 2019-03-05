@@ -11,4 +11,5 @@ variables = database.find_ingredient_types(
      "vegetarian", "legumes",
      "fruits", "cheeses",
      "grains", "noodles",
-     "nuts", "vegetables"])
+     "nuts", "vegetables",
+     "spices"])
