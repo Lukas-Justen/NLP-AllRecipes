@@ -1,10 +1,14 @@
 *REPLACE*
-%legumes% > %meats%
-%vegetarian% > %meats%
-egg, eggplant, mushrooms >  %meats%
-spinach > %meats%
-coconut milk > chicken broth
-hemp milk > beef broth
-garlic sauce > oyster sauce
-zucchini > meatballs
-vinegar > fish sauce
+%legumes% > pork, lamb
+seitan, tofu, tempeh > beef
+vegan minced meat, quorn, lupine, barley, millet, spelt, egg >  chicken
+avocado oil, olive oil, balsamic vinegar > chicken broth
+soy sauce > beef broth
+garlic sauce > red jalapeno peppers
+zucchini, eggplant, broccoli, brussels sprouts > meatballs
+mushrooms > bacon
+vinegar > white wine
+cauliflower, veggieburger > ground beef
+brussels sprouts > sliced pork belly
+%fruits% > chicken
+oil > bacon fat

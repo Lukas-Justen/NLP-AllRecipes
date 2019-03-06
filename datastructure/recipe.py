@@ -136,9 +136,18 @@ class Recipe(object):
                         replace_with = random.choice(to_types)
                         if len(to_types) > 1:
                             to_types.remove(replace_with)
+
+                        if ingredient.descriptor:
+                           list_descriptor = ingredient.descriptor.split()
+                           for word in list_descriptor:
+                               ingredient.phrase = str(ingredient.phrase).replace(' '.join(word),'')
+
+                        ingredient.descriptor = None
                         ingredient.phrase = str(ingredient.phrase).replace(ingredient.name, replace_with)
+
                         self.replace_direction(ingredient.name, replace_with)
                         ingredient.name = replace_with
+
 
     def simple_match(self, ingredient_from_list,ingredient_in_recipe):
         return ingredient_from_list in ingredient_in_recipe

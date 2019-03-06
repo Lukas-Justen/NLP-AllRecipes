@@ -1,0 +1,14 @@
+*REPLACE*
+pork, lamb > %legumes%
+beef > seitan, tofu, tempeh
+chicken > vegan minced meat, quorn, lupine, barley, millet, spelt, egg
+chicken broth > avocado oil, olive oil, balsamic vinegar
+beef broth > soy sauce
+red jalapeno peppers > garlic sauce
+meatballs > zucchini, eggplant, broccoli, brussels sprouts
+bacon > mushrooms
+ground beef > cauliflower, veggieburger
+pork belly > brussels sprouts
+chicken > %fruits%
+fat > sunflower oil
+%meats% > mushrooms
