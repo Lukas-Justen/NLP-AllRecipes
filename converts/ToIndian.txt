@@ -1,4 +1,8 @@
 *REPLACE*
+beef > lamb
+pig > lamb
+duck > chicken
+goose > chicken
 %meats% > lamb, chicken, goat
 %seafood% > tilapia, hilsa, koi, catla, rohu, catfish
 %shellfish% > crab, prawn, lobster
@@ -8,5 +12,18 @@
 eggplant > brinjal
 bell peppers, peppers > capsicum
 roots > taro, sweet potato
+zuccinii > brinjal, jackfruit
+cayenne > mild chilli powder
+nutmeg > ginger, cinnamon
+aniseed > fennel seed
+cajun spice > garlic powder, black pepper
+mace > cinnamon, ginger
+appliepie spice > cardamom
+
+
+
 *ADD*
 turmeric > season, mix > 0.5 > tablespoon
+garam masala > season, mix > 0.5 > tablespoon
+coriander powder > season, mix > 0.5 > tablespoon
+cardomom > season, mix broth > 0.5 > tablespoon
