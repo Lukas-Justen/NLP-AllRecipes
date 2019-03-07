@@ -65,3 +65,12 @@ class Database(object):
                 string += i['name'] + ", "
             dictionary[type] = string[:-2]
         return dictionary
+
+    def find_recipes(self, category):
+        recipes_list = self.recipes.find()
+        recipes_dict = [dict for dict in recipes_list]
+        recipes = []
+        for dicts in recipes_dict:
+            if category in dicts["breadcrumbs"]:
+                recipes.append(dicts)
+        return recipes
