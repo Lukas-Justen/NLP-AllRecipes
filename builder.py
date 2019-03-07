@@ -1,20 +1,23 @@
 from datastructure.resources import variables, database
 from scraper.recipescraper import RecipeScraper
+from scraper.seleniumscraper import SeleniumScraper
 
 
-def scrape_category(category_url):
-    recipes = []
-    url = "https://www.allrecipes.com/recipe/220643"
-    scraper = RecipeScraper(url, "")
-    recipe1 = scraper.get_recipe()
+def scrape_category(category_url, category_name):
+    scraper = SeleniumScraper(category_url)
+    scraper.scrape_urls()
+    urls = scraper.get_urls_to_be_scraped()
 
-    url = "https://www.allrecipes.com/recipe/222343"
-    scraper = RecipeScraper(url, "")
-    recipe2 = scraper.get_recipe()
-
-    recipes.append(recipe1)
-    recipes.append(recipe2)
-    return recipes
+    for u in urls:
+        try:
+            scraper = RecipeScraper(u, category_name)
+            recipe = scraper.get_recipe()
+            if not "Desserts" in recipe.breadcrumbs:
+                database.insert_recipe(recipe)
+            print("Scraped :   " + u)
+        except Exception as e:
+            # print(e)
+            print("Unable  :   " + u)
 
 
 def get_ingredient_type(ingredient, variables):
@@ -27,7 +30,7 @@ def get_ingredient_type(ingredient, variables):
 def count_ingredients(recipes):
     counter = {"meats": {}, "seafood": {}, "poultry": {}, "shellfish": {}, "vegetarian": {}, "legumes": {},
                "fruits": {}, "cheeses": {}, "grains": {}, "noodles": {}, "nuts": {}, "vegetables": {}, "spices": {},
-               "others": {}}
+               "liquids": {}, "others": {}}
 
     for recipe in recipes:
         for ingredient in recipe["ingredients"]:
@@ -42,7 +45,17 @@ def count_ingredients(recipes):
         counter[key] = {k: counter[key][k] for k in sorted(counter[key], key=counter[key].get, reverse=True)}
     return counter
 
-recipes = database.find_recipes("Vegetarian")
-# recipes = scrape_category("some_url")
+category = "German"
+# url = "https://www.allrecipes.com/recipes/722/world-cuisine/european/german/"
+#
+# scrape_category(url, category)
+recipes = database.find_recipes(category)
 counter = count_ingredients(recipes)
+
 counter
+
+# url = "https://www.allrecipes.com/recipe/20068/"
+# scraper = RecipeScraper(url, "German")
+# recipe = scraper.get_recipe()
+# database.insert_recipe(recipe)
+# recipe

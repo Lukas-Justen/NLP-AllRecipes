@@ -62,16 +62,19 @@ class Recipe(object):
         self.protein = protein
         self.cholesterol = cholesterol
         self.sodium = sodium
-        self.variable_finder = re.compile(r'%(?P<variable_name>\w+)%')
 
     def __str__(self):
         table_ingredients = []
         for ingredient in self.ingredients:
             table_ingredients.append([ingredient.quantity, ingredient.measurement, ingredient.descriptor, ingredient.name, ingredient.phrase])
         table_directions = []
+        table_timetemp =[]
+        table_phrases = []
         counter = 1
         for direction in self.directions:
-            table_directions.append([counter, direction.tools,direction.actions, direction.ingredients, direction.time, direction.temperature, direction.phrase])
+            table_directions.append([counter, direction.tools,direction.actions, direction.ingredients])
+            table_timetemp.append([counter,direction.time,direction.temperature])
+            table_phrases.append([counter, direction.phrase])
             counter += 1
         return "Recipe Name: " + str(self.name)+ "\n" \
                "Url        : " + str(self.url) + "\n\n" \
@@ -87,7 +90,9 @@ class Recipe(object):
                "Cholesterol: " + str(self.cholesterol)+ "\n"\
                "Sodium     : " + str(self.sodium)+ "\n\n"\
                "\n\n" + tabulate(table_ingredients, headers=['Quantity', 'Measurement', "Descriptor", "Name", "Phrase"]) + "\n"\
-               "\n\n" + tabulate(table_directions, headers=["Step", "Tools", "Actions", "Ingredients", "Time","Temperature", "Phrase"])
+               "\n\n" + tabulate(table_directions, headers=["Step", "Tools", "Actions", "Ingredients"]) + "\n"\
+               "\n\n" + tabulate(table_timetemp, headers=["Step", "Time", "Temperature"]) + "\n"\
+               "\n\n" + tabulate(table_phrases, headers=["Step", "Phrase"])
 
     def convert(self, template_file, variables):
         template = {"REPLACE":[], "ADD": [], "SCALE": []}
@@ -104,6 +109,7 @@ class Recipe(object):
                 if mode == "REPLACE":
                     from_ingredients = str(parts[0]).strip().split(", ")
                     to_ingredients = str(parts[1]).strip().split(", ")
+                    from_ingredients = [i for i in from_ingredients if i not in to_ingredients]
                     replacement_dict = {"from":from_ingredients, "to": to_ingredients}
                     template[mode].append(replacement_dict)
                 elif mode == "ADD":
@@ -116,23 +122,27 @@ class Recipe(object):
                     ingredient = str(parts[0]).strip()
                     scale = float(str(parts[1]).strip())
                     template["SCALE"].append({"ingredient":ingredient, "scale":scale})
-        self.replace(template["REPLACE"])
-        self.add(template["ADD"])
+        replacements_made = self.replace(template["REPLACE"])
+        additions_made = self.add(template["ADD"])
         self.scale(template["SCALE"])
+        return (replacements_made, additions_made)
 
     def insert_variables(self, line, variables):
-        matches = self.variable_finder.findall(line)
+        matches = re.findall(r'%(?P<variable_name>\w+)%',line)
         for match in matches:
             line = line.replace("%" + match + "%", variables[match])
         return line
 
     def replace(self, list_of_replacements):
+        replacements_made = []
+        replaced = []
         for replacement in list_of_replacements:
             from_types = replacement["from"]
             to_types = replacement["to"]
             for type in from_types:
-                for ingredient in self.ingredients:
-                    if self.simple_match(type,ingredient.name):
+                for index, ingredient in enumerate(self.ingredients):
+                    if index not in replaced and self.simple_match(type,ingredient.name):
+                        replaced.append(index)
                         replace_with = random.choice(to_types)
                         if len(to_types) > 1:
                             to_types.remove(replace_with)
@@ -146,7 +156,9 @@ class Recipe(object):
                         ingredient.phrase = str(ingredient.phrase).replace(ingredient.name, replace_with)
 
                         self.replace_direction(ingredient.name, replace_with)
+                        replacements_made.append(ingredient.name + " > " + replace_with)
                         ingredient.name = replace_with
+        return replacements_made
 
 
     def simple_match(self, ingredient_from_list,ingredient_in_recipe):
@@ -159,6 +171,7 @@ class Recipe(object):
                 direction.phrase = str(direction.phrase).replace(from_name, to_name)
 
     def add(self, list_of_additions):
+        additions_made = []
         for addition in list_of_additions:
             added = False
             for direction in self.directions:
@@ -176,7 +189,9 @@ class Recipe(object):
                             direction.ingredients.append(to_add)
                             old_ingredient = direction.ingredients[0]
                             direction.phrase = str(direction.phrase).replace(old_ingredient, old_ingredient + ", " + to_add)
+                        additions_made.append(str(builder.quantity) + "  " + str(builder.measurement) +"  " +to_add)
                         added = True
+        return additions_made
 
     def scale(self, list_of_scalings):
         pass

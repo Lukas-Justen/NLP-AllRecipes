@@ -28,7 +28,8 @@ class Database(object):
             "noodles": self.all_recipes_db.noodles,
             "nuts": self.all_recipes_db.nuts,
             "vegetables": self.all_recipes_db.vegetables,
-            "spices": self.all_recipes_db.spices
+            "spices": self.all_recipes_db.spices,
+            "liquids": self.all_recipes_db.liquids
         }
 
     def insert_recipe(self, recipe):

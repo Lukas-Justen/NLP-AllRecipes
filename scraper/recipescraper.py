@@ -42,7 +42,7 @@ class RecipeScraper(object):
 
     def get_ingredients(self):
         ingredient_spans = self.soup.find_all("span", itemprop="recipeIngredient")
-        ingredient_texts = [span.text for span in ingredient_spans]
+        ingredient_texts = [span.text for span in ingredient_spans if span.text[-1] != ":"]
         ingredients = IngredientBuilder.convert_to_ingredients(ingredient_texts)
         return ingredients
 

@@ -47,7 +47,7 @@ class DirectionBuilder(object):
     def parse_actions(self, sentence):
         found = set()
         sentence = sentence.lower()
-        words = [w for w in sentence.split() if w not in self.stopwords]
+        words = [w for w in sentence.split() if w not in self.stopwords and len(w) > 1]
         for word in words:
             for action in actions:
                 if str(word).startswith(action):
@@ -58,7 +58,7 @@ class DirectionBuilder(object):
     def parse_tools(self, sentence):
         found = set()
         sentence = sentence.lower()
-        words = [w for w in sentence.split() if w not in self.stopwords]
+        words = [w for w in sentence.split() if w not in self.stopwords and len(w) > 1]
         for word in words:
             for tool in tools:
                 if str(tool).startswith(word) and abs(len(tool) - len(word)) <= 4:
@@ -85,7 +85,7 @@ class DirectionBuilder(object):
         words = [w for w in words if w not in found_names]
         for word in words:
             for name in ingredient_names:
-                if len(word) >= 3 and word in name:
+                if len(word) > 3 and word in name:
                     if word in second_match:
                         new_sentence = new_sentence.replace(word, "")
                     else:

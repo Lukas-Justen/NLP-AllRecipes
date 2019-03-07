@@ -12,4 +12,4 @@ variables = database.find_ingredient_types(
      "fruits", "cheeses",
      "grains", "noodles",
      "nuts", "vegetables",
-     "spices"])
+     "spices", "liquids"])
