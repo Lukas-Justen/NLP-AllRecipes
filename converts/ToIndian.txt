@@ -3,6 +3,13 @@ beef > lamb
 pig > lamb
 duck > chicken
 goose > chicken
+veal > lamb
+sausage > chicken sausage
+pork > lamb
+pigeon > chicken
+pork tenderloin > lamb
+guacamole > methi chutney
+barbecue sauce > implies chutney
 %meats% > lamb, chicken, goat
 %seafood% > tilapia, hilsa, koi, catla, rohu, catfish
 %shellfish% > crab, prawn, lobster
@@ -18,7 +25,7 @@ nutmeg > ginger, cinnamon
 aniseed > fennel seed
 cajun spice > garlic powder, black pepper
 mace > cinnamon, ginger
-appliepie spice > cardamom
+applepie spice > cardamom
 *ADD*
 turmeric > season, mix > 0.5 > tablespoon
 garam masala > season, mix > 0.5 > tablespoon
