@@ -32,7 +32,8 @@ class IngredientPredict:
 
         chunked = self.classifier.tag(pos_tag(word_tokenize(text)))
 
-        for word, pos, ner in chunked:
+        for tag, ner in chunked:
+            word, pos = tag
             if 'QUANTITY' in ner:
                 self.dict_['qty'].add(word)
             elif 'FAC' in ner:
