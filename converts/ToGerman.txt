@@ -19,6 +19,7 @@ turkey stock > chicken broth
 turkey liver > chicken liver
 italian seasoning > fresh parsley
 russet potatoes > potatoes
+%seafood% > smoked eel, salmon, forelle
 %meats% > veal, beef, pork, beef
 %poultry% > chicken
 %cheeses% > emmentaler cheese, swiss cheese, algauer cheese, limburger cheese, harzer cheese, gouda, ziegel cheese, whipping cream, cream cheese

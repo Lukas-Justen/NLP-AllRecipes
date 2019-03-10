@@ -16,12 +16,12 @@ class Database(object):
         self.tools = self.all_recipes_db.tools
         self.actions = self.all_recipes_db.actions
         self.ingredient_types = {
-            "meats" : self.all_recipes_db.meats,
+            "meats": self.all_recipes_db.meats,
             "seafood": self.all_recipes_db.seafood,
             "poultry": self.all_recipes_db.poultry,
             "shellfish": self.all_recipes_db.shellfish,
             "vegetarian": self.all_recipes_db.vegetarian,
-            "legumes" : self.all_recipes_db.legumes,
+            "legumes": self.all_recipes_db.legumes,
             "fruits": self.all_recipes_db.fruits,
             "cheeses": self.all_recipes_db.cheeses,
             "grains": self.all_recipes_db.grains,
