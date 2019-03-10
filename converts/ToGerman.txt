@@ -6,7 +6,7 @@ wine > riesling, silvaner, red wine, huxelrebe
 kale > cabbage, red cabbage
 rice, wild rice > potatoes
 salt > onion salt
-olive oil > pork fat, canola oil, butter
+oil > pork fat, canola oil, butter
 cream cheese > spundekaese
 gorgonzola, gorgonzola cheese > bergader cheese
 chicken broth > beer, beer, beer, beef broth
@@ -14,6 +14,7 @@ lemon > white wine vinegar
 water > riesling
 tomatoes > german tomatoes
 tomato paste > vinegar
+ricotta cheese > cream cheese
 tomato sauce > vegetable broth
 turkey stock > chicken broth
 turkey liver > chicken liver
@@ -24,9 +25,8 @@ russet potatoes > potatoes
 %poultry% > chicken
 %cheeses% > emmentaler cheese, swiss cheese, algauer cheese, limburger cheese, harzer cheese, gouda, ziegel cheese, whipping cream, cream cheese
 %noodles% > spaetzle, schupfnudeln, potato noodles, spaetzle, spaetzle
-oil > pork fat, butter
 %liquids% > riesling, silvaner, beef broth, red wine, tomato sauce, tomato paste
-%vegetables% > shallots, mushrooms, russet potatoes, onion, tomatoes, onions, sauerkraut, potatoes, cabbage, sauerkraut, celery, carrots, red cabbage, fennel, spinach, tomatoes, peas, celery root
+%vegetables% > shallots, mushrooms, russet potatoes, onion, tomatoes, onions, sauerkraut, potatoes, cabbage, sauerkraut, celery, carrots, red cabbage, fennel, spinach, tomatoes, peas, celery root, red bell pepper, shallots, mushrooms
 sugar > white sugar
 lettuce > endive, corn salad
 %spices% > garlic, black pepper, parsley, nutmeg, cloves, caraway seeds, fennel seeds, bay leaves, onion powder, mustard, celery seeds, majoram

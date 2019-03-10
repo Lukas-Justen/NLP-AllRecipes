@@ -3,7 +3,7 @@
 %meats% > pork, chicken, duck, beef
 pasta > vermicelli
 %fruits% > passion fruit, dragonfruit, asian pear
-olive oil > 
+olive oil > canola oil
 sauce > hoisin sauce, oyster sauce
 salt > soy sauce, fish sauce, sesame oil
 vinegar > rice vinegar

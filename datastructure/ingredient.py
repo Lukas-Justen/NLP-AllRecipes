@@ -4,6 +4,9 @@ from fractions import Fraction
 
 import pymongo
 
+from tagging.utils import tag_ingredient_parts
+
+
 class IngredientBuilder(object):
 
     def __init__(self):
@@ -34,12 +37,12 @@ class IngredientBuilder(object):
     def convert(self, phrase):
         phrase = re.sub(r'\(.*\)', " ", phrase)
         phrase = phrase.lower()
-        taggings = tagger.tag_phrase(phrase)
-        # taggings = tag_ingredient_parts(phrase)
-        self.quantity = taggings["qty"] if "qty" in taggings else self.quantity
-        self.measurement = self.strip_value(taggings["unit"] if "unit" in taggings else self.quantity)
-        self.name = taggings["name"] if "name" in taggings else self.quantity
-        self.descriptor = self.strip_value(taggings["comment"] if "comment" in taggings else self.preparation)
+        custom_taggings = tagger.tag_phrase(phrase)
+        descriptor_taggings = tag_ingredient_parts(phrase)
+        self.quantity = custom_taggings["qty"] if "qty" in custom_taggings else self.quantity
+        self.measurement = self.strip_value(custom_taggings["unit"] if "unit" in custom_taggings else self.quantity)
+        self.name = custom_taggings["name"] if "name" in custom_taggings else self.quantity
+        self.descriptor = self.strip_value(descriptor_taggings["comment"] if "comment" in descriptor_taggings else self.preparation)
         self.phrase = str(phrase).lower()
 
     def strip_value(self, value):
@@ -96,12 +99,25 @@ class IngredientParser:
         phrase, qty = self.get_quantity(phrase)
         phrase, unit = self.get_unit(phrase)
         phrase, name = self.get_ingredient(phrase)
-        phrase, comment = self.get_comments(phrase)
+        phrase, comments = self.get_comments(phrase)
+
+        name_parts = name.split()
+        comments = [c for c in comments if not c in name_parts and c not in name]
+        new_comments = []
+        for comment1 in comments:
+            good = True
+            for comment2 in comments:
+                if comment1 != comment2 and comment1 in comment2:
+                    good = False
+                    break
+            if good:
+                new_comments.append(comment1)
+        comment = ", ".join(new_comments)
+
         taggings["qty"] = qty
         taggings["unit"] = unit
         taggings["comment"] = comment
         taggings["name"] = name
-        print(str(taggings["qty"]) + " \t\t" + str(taggings["unit"]) + "\t\t"+str(taggings["name"]) + "\t\t" + str(taggings["comment"]))
         return taggings
 
     def get_quantity(self, phrase):
@@ -142,20 +158,15 @@ class IngredientParser:
     def get_ingredient(self, phrase):
         for ingredient in self.ingredients_list:
             if ingredient in phrase:
-                phrase = phrase.replace(ingredient, "")
-                phrase = phrase.strip()
-                return phrase, ingredient
+                return phrase, str(ingredient).strip()
         return phrase, None
 
     def get_comments(self, phrase):
         comments = []
         for comment in self.comments_list:
             if comment in phrase:
-                phrase = phrase.replace(comment, "")
-                phrase = phrase.strip()
                 comments.append(comment)
-        comment_string = ", ".join(comments)
-        return phrase, comment_string
+        return phrase, comments
 
     def find_units(self):
         units_list = self.units.find()
@@ -164,7 +175,7 @@ class IngredientParser:
         for dicts in units_dict:
             if dicts["unit"]:
                 units.append(dicts['unit'])
-        units.sort(key=len, reverse=True)
+        # units.sort(key=len, reverse=True)
         return units
 
     def find_ingredients(self):
