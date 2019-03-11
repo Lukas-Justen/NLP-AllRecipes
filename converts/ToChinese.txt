@@ -1,0 +1,26 @@
+*REPLACE*
+%cheeses% > fennel, chinese cabbage, shredded red cabbage, shaved daikon
+oregano > green onion
+%meats% > pork, chicken, duck, beef
+sage > ginger, sichuan pepper, anise, garlic, white pepper powder, basil, lemongrass
+dill > ginger, sichuan pepper, anise, garlic, white pepper powder, basil, lemongrass
+parsley > ginger, sichuan pepper, anise, garlic, white pepper powder, basil, lemongrass
+thyme > ginger, sichuan pepper, anise, garlic, white pepper powder, basil, lemongrass
+cilantro > ginger, sichuan pepper, anise, garlic, white pepper powder, basil, lemongrass
+bay leaves > ginger, sichuan pepper, anise, garlic, white pepper powder, basil, lemongrass
+oregano > ginger, sichuan pepper, anise, garlic, white pepper powder, basil, lemongrass
+beef broth >
+%vegetarian% > tofu
+pasta > vermicelli
+%fruits% > passion fruit, dragonfruit, asian pear
+olive oil > peanut oil, sesame oil
+sauce > hoisin sauce, oyster sauce
+salt > soy sauce, fish sauce
+vinegar > rice vinegar, rice wine
+spinach, kale, lettuce > bok choy, chinese cabbage
+hot sauce > sriracha
+couscous, quinoa, orzo > white rice
+chili paste > chili sambal
+beans, chickpeas > edamame
+peas > snow peas
+tortillas > dumpling skins

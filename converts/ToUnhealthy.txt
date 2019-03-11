@@ -1,0 +1,19 @@
+*REPLACE*
+oil, olive oil, sesame oil, canola oil, peanut oil, soybean oil, butter, cooking spray > lard, pork fat, butter
+chicken > chicken thigh
+milk > whole milk
+light cream > heavy cream
+lean > fatty
+avocado > bacon
+onion > %cheeses%
+light whipping cream > heavy whipping cream
+egg > egg yolk
+water > beef broth, chicken broth
+sesame seeds > %cheeses%
+green onion > %cheeses%
+hummus > %cheeses%
+*SCALE*
+lard, pork fat > 2
+salt > 2
+%cheeses% > 2
+sauce > 2

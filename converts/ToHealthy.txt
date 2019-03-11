@@ -1,0 +1,21 @@
+*REPLACE*
+%cheeses% > green onion, tahini spread
+heavy cream > light cream
+chicken broth, beef broth, vegetable broth, veggie broth > water
+butter > margarine
+chicken > skinless chicken breast
+egg > egg white
+whole milk > skim milk
+bacon > avocado
+heavy whipping cream > light whipping cream
+potatoes > cauliflower
+pork belly > pork
+mayonnaise > light mayonnaise
+salad dressing > balsamic vinegar
+orzo, rice > quinoa
+*SCALE*
+oil, olive oil, sesame oil, canola oil, peanut oil, soybean oil > 0.5
+vegetable oil > 0.5
+salt > 0.5
+margarine > 0.5
+sauce > 0.5
