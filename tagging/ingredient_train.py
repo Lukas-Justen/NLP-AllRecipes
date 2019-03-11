@@ -182,22 +182,22 @@ class NamedEntityChunker(ChunkParserI):
 
 
 
-data = pd.read_csv('https://raw.githubusercontent.com/nytimes/ingredient-phrase-tagger/master/nyt-ingredients-snapshot-2015.csv')
-data = data[['input','name','qty','unit']]
-data = data.loc[data.input.notna()]
-data['input'] = data.input.str.lower()
-data['input'] = data.input.apply(lambda x: re.sub(r'[,.!?()-+|]+', ' ', x))
-data['input'] = data.input.apply(lambda x: convert_decimal(x))
-data.reset_index(inplace=True,drop=True)
-data['pos_tagger'] = data.input.apply(lambda x: pos_category(x))
-data['tagger'] = data.apply(tagging, axis=1)
-data['tagger'] = data.tagger.apply(lambda x : to_conll_iob(x))
-
-
-training_samples = list(data.tagger)
-chunker = NamedEntityChunker(training_samples)
-
-
-f = open('./tagging/ingredient.pickle', 'wb')
-pickle.dump(chunker.tagger, f)
-f.close()
+# data = pd.read_csv('https://raw.githubusercontent.com/nytimes/ingredient-phrase-tagger/master/nyt-ingredients-snapshot-2015.csv')
+# data = data[['input','name','qty','unit']]
+# data = data.loc[data.input.notna()]
+# data['input'] = data.input.str.lower()
+# data['input'] = data.input.apply(lambda x: re.sub(r'[,.!?()-+|]+', ' ', x))
+# data['input'] = data.input.apply(lambda x: convert_decimal(x))
+# data.reset_index(inplace=True,drop=True)
+# data['pos_tagger'] = data.input.apply(lambda x: pos_category(x))
+# data['tagger'] = data.apply(tagging, axis=1)
+# data['tagger'] = data.tagger.apply(lambda x : to_conll_iob(x))
+#
+#
+# training_samples = list(data.tagger)
+# chunker = NamedEntityChunker(training_samples)
+#
+#
+# f = open('./tagging/ingredient.pickle', 'wb')
+# pickle.dump(chunker.tagger, f)
+# f.close()

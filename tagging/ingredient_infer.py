@@ -1,7 +1,9 @@
-import re
 import pickle
-from nltk import pos_tag, word_tokenize
+import re
 from fractions import Fraction
+
+from nltk import pos_tag, word_tokenize
+
 
 class IngredientPredict:
 
@@ -12,7 +14,7 @@ class IngredientPredict:
         self.classifier = pickle.load(f)
         f.close()
 
-    def convert_decimal(self,text):
+    def convert_decimal(self, text):
         try:
             text_split = text.split()
             if text_split[0].isdigit() and '/' in text_split[1]:
@@ -24,7 +26,7 @@ class IngredientPredict:
         except:
             return text
 
-    def predict_new(self,text):
+    def predict_new(self, text):
         text = text.lower()
         text = re.sub(r'[,.!?()-+|]+', ' ', text)
         text = self.convert_decimal(text)
