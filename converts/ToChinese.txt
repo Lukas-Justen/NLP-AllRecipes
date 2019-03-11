@@ -1,5 +1,5 @@
 *REPLACE*
-%cheeses% > fennel, chinese cabbage
+%cheeses% > fennel, chinese cabbage, shredded red cabbage, shaved daikon
 oregano > green onion
 %meats% > pork, chicken, duck, beef
 sage > ginger, sichuan pepper, anise, garlic, white pepper powder, basil, lemongrass
