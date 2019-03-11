@@ -4,7 +4,7 @@ from fractions import Fraction
 
 import pymongo
 
-from tagging.ingredient_infer import IngredientPredict
+from tagging.ingredient_train import IngredientPredict
 from tagging.utils import tag_ingredient_parts
 
 
@@ -38,13 +38,13 @@ class IngredientBuilder(object):
     def convert(self, phrase):
         phrase = re.sub(r'\(.*\)', " ", phrase)
         phrase = phrase.lower()
-        taggings = IngredientPredict().get_taggings(phrase)
-        # custom_taggings = tagger.tag_phrase(phrase)
-        # descriptor_taggings = tag_ingredient_parts(phrase)
-        self.quantity = taggings["qty"] if "qty" in taggings else self.quantity
-        self.measurement = self.strip_value(taggings["unit"] if "unit" in taggings else self.quantity)
-        self.name = taggings["name"] if "name" in taggings else self.quantity
-        self.descriptor = self.strip_value(taggings["comment"] if "comment" in taggings else self.preparation)
+        descriptor_taggings = IngredientPredict().get_taggings(phrase)
+        custom_taggings = tagger.tag_phrase(phrase)
+        #descriptor_taggings = tag_ingredient_parts(phrase)
+        self.quantity = custom_taggings["qty"] if "qty" in custom_taggings else self.quantity
+        self.measurement = self.strip_value(custom_taggings["unit"] if "unit" in custom_taggings else self.quantity)
+        self.name = custom_taggings["name"] if "name" in custom_taggings else self.quantity
+        self.descriptor = self.strip_value(descriptor_taggings["comment"] if "comment" in descriptor_taggings else self.preparation)
         self.phrase = str(phrase).lower()
 
     def strip_value(self, value):

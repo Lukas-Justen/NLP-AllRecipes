@@ -1,5 +1,6 @@
 from datastructure.resources import variables
 from scraper.recipescraper import RecipeScraper
+from tagging.ingredient_train import *
 
 
 print("WELCOME TO THE RECIPE CONVERTER")

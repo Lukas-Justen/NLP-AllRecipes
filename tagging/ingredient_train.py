@@ -3,12 +3,14 @@ import re
 import string
 import pickle
 import pandas as pd
+from pathlib import Path
 from fractions import Fraction
 from nltk.stem.snowball import SnowballStemmer
 from collections import Iterable
 from nltk.tag import ClassifierBasedTagger
 from nltk.chunk import ChunkParserI
 from nltk.chunk import conlltags2tree, tree2conlltags
+from nltk import pos_tag, word_tokenize
 
 
 def convert_decimal(text):
@@ -181,23 +183,93 @@ class NamedEntityChunker(ChunkParserI):
         return conlltags2tree(iob_triplets)
 
 
+my_file  =Path("./tagging/ingredient.pickle")
+if not my_file.exists():
+    data = pd.read_csv('https://raw.githubusercontent.com/nytimes/ingredient-phrase-tagger/master/nyt-ingredients-snapshot-2015.csv')
+    data = data[['input','name','qty','unit']]
+    data = data.loc[data.input.notna()]
+    data['input'] = data.input.str.lower()
+    data['input'] = data.input.apply(lambda x: re.sub(r'[,.!?()-+|]+', ' ', x))
+    data['input'] = data.input.apply(lambda x: convert_decimal(x))
+    data.reset_index(inplace=True,drop=True)
+    data['pos_tagger'] = data.input.apply(lambda x: pos_category(x))
+    data['tagger'] = data.apply(tagging, axis=1)
+    data['tagger'] = data.tagger.apply(lambda x : to_conll_iob(x))
 
-# data = pd.read_csv('https://raw.githubusercontent.com/nytimes/ingredient-phrase-tagger/master/nyt-ingredients-snapshot-2015.csv')
-# data = data[['input','name','qty','unit']]
-# data = data.loc[data.input.notna()]
-# data['input'] = data.input.str.lower()
-# data['input'] = data.input.apply(lambda x: re.sub(r'[,.!?()-+|]+', ' ', x))
-# data['input'] = data.input.apply(lambda x: convert_decimal(x))
-# data.reset_index(inplace=True,drop=True)
-# data['pos_tagger'] = data.input.apply(lambda x: pos_category(x))
-# data['tagger'] = data.apply(tagging, axis=1)
-# data['tagger'] = data.tagger.apply(lambda x : to_conll_iob(x))
-#
-#
-# training_samples = list(data.tagger)
-# chunker = NamedEntityChunker(training_samples)
-#
-#
-# f = open('./tagging/ingredient.pickle', 'wb')
-# pickle.dump(chunker.tagger, f)
-# f.close()
+
+    training_samples = list(data.tagger)
+    chunker = NamedEntityChunker(training_samples)
+
+
+    f = open('./tagging/ingredient.pickle', 'wb')
+    pickle.dump(chunker.tagger, f)
+    f.close()
+
+
+
+
+
+class IngredientPredict:
+
+    def __init__(self):
+        self.dict_ = {'qty': [], 'unit': [], 'name': [], "comment": []}
+
+        f = open('./tagging/ingredient.pickle', 'rb')
+        self.classifier = pickle.load(f)
+        f.close()
+
+    def convert_decimal(self, text):
+        try:
+            text_split = text.split()
+            if text_split[0].isdigit() and '/' in text_split[1]:
+                fraction = round(float(sum(Fraction(s) for s in [text_split[0], text_split[1]])), 2)
+                text = text.replace(' '.join([text_split[0], text_split[1]]), str(fraction))
+                return text
+            else:
+                return text
+        except:
+            return text
+
+    def predict_new(self, text):
+        text = text.lower()
+        text = re.sub(r'[,.!?()-+|]+', ' ', text)
+        text = self.convert_decimal(text)
+
+        chunked = self.classifier.tag(pos_tag(word_tokenize(text)))
+
+        for tag, ner in chunked:
+            word, pos = tag
+            if 'QUANTITY' in ner:
+                self.dict_['qty'].append(word)
+            elif 'FAC' in ner:
+                self.dict_['unit'].append(word)
+            elif 'PRODUCT' in ner:
+                self.dict_['name'].append(word)
+            else:
+                self.dict_["comment"].append(word)
+
+        return self.dict_
+
+    def get_taggings(self, phrase):
+        dict = self.predict_new(phrase)
+        taggings = {}
+        name = " ".join(dict["name"])
+
+        if len(dict["comment"]) > 0:
+           comment = " ".join(dict["comment"])
+        else:
+           comment = None
+
+        if len(dict["qty"]) > 0:
+           taggings["qty"] = float(Fraction(dict["qty"][0]))
+        else:
+           taggings["qty"] = 1
+
+        if len(dict["unit"]) > 0:
+           taggings["unit"] = str(dict["unit"][0])
+        else:
+           taggings["unit"] = None
+
+        taggings["name"] = name
+        taggings["comment"] = comment
+        return taggings
