@@ -20,6 +20,10 @@ def convert_decimal(text):
        fraction = round(float(sum(Fraction(s) for s in [text_split[0],text_split[1]])),2)
        text = text.replace(' '.join([text_split[0],text_split[1]]), str(fraction))
        return text
+    elif '/' in text_split[0]:
+        value = float(Fraction(text_split[0]))
+        text = text.replace(text_split[0], str(value))
+        return text
     else:
        return text
   except:
@@ -185,16 +189,24 @@ class NamedEntityChunker(ChunkParserI):
 
 my_file  =Path("./tagging/ingredient.pickle")
 if not my_file.exists():
-    data = pd.read_csv('https://raw.githubusercontent.com/nytimes/ingredient-phrase-tagger/master/nyt-ingredients-snapshot-2015.csv')
-    data = data[['input','name','qty','unit']]
+    data = pd.read_csv(
+        'https://raw.githubusercontent.com/nytimes/ingredient-phrase-tagger/master/nyt-ingredients-snapshot-2015.csv')
+    data = data[['input', 'name', 'qty', 'unit']]
     data = data.loc[data.input.notna()]
+    data.reset_index(inplace=True, drop=True)
+
     data['input'] = data.input.str.lower()
+    data['name'] = data.name.str.lower()
+    data['unit'] = data.unit.str.lower()
+
     data['input'] = data.input.apply(lambda x: re.sub(r'[,.!?()-+|]+', ' ', x))
+    data['input'] = data.input.apply(lambda x: re.sub(r' +', ' ', x))
     data['input'] = data.input.apply(lambda x: convert_decimal(x))
-    data.reset_index(inplace=True,drop=True)
+
     data['pos_tagger'] = data.input.apply(lambda x: pos_category(x))
+
     data['tagger'] = data.apply(tagging, axis=1)
-    data['tagger'] = data.tagger.apply(lambda x : to_conll_iob(x))
+    data['tagger'] = data.tagger.apply(lambda x: to_conll_iob(x))
 
 
     training_samples = list(data.tagger)
@@ -233,7 +245,8 @@ class IngredientPredict:
     def predict_new(self, text):
         text = text.lower()
         text = re.sub(r'[,.!?()-+|]+', ' ', text)
-        text = self.convert_decimal(text)
+        text = re.sub(r' +', ' ', text)
+        text = convert_decimal(text)
 
         chunked = self.classifier.tag(pos_tag(word_tokenize(text)))
 
