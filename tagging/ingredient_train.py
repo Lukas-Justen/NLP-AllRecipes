@@ -9,7 +9,7 @@ from nltk.stem.snowball import SnowballStemmer
 from collections import Iterable
 from nltk.tag import ClassifierBasedTagger
 from nltk.chunk import ChunkParserI
-from nltk.chunk import conlltags2tree, tree2conlltags
+from nltk.chunk import conlltags2tree
 from nltk import pos_tag, word_tokenize
 
 

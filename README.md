@@ -5,7 +5,11 @@ In order to make sure that our code runs properly you will need to install all f
  - conda install dnspython
  - conda install pymongo
  - conda install tabulate
- -
+ - conda install beautifulsoup4
+ - conda install requests
+ - conda install selenium
+ - conda install nltk
+ - conda install pandas
  
 #### 2. Running the Code
 In order to run the code you will need to call the pipeline python script:
