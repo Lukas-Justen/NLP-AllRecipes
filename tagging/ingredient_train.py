@@ -181,6 +181,7 @@ class NamedEntityChunker(ChunkParserI):
         return conlltags2tree(iob_triplets)
 
 
+
 data = pd.read_csv('https://raw.githubusercontent.com/nytimes/ingredient-phrase-tagger/master/nyt-ingredients-snapshot-2015.csv')
 data = data[['input','name','qty','unit']]
 data = data.loc[data.input.notna()]
@@ -197,6 +198,6 @@ training_samples = list(data.tagger)
 chunker = NamedEntityChunker(training_samples)
 
 
-f = open('ingrdient.pickle', 'wb')
+f = open('./tagging/ingredient.pickle', 'wb')
 pickle.dump(chunker.tagger, f)
 f.close()

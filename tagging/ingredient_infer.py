@@ -1,14 +1,14 @@
 import re
 import pickle
 from nltk import pos_tag, word_tokenize
-#from nltk.chunk import conlltags2tree, tree2conlltags
 from fractions import Fraction
 
 class IngredientPredict:
-    def __init__(self):
-        self.dict_ = {'qty': set(), 'unit': set(), 'name': []}
 
-        f = open('ingrdient.pickle', 'rb')
+    def __init__(self):
+        self.dict_ = {'qty': [], 'unit': [], 'name': [], "comment": []}
+
+        f = open('./tagging/ingredient.pickle', 'rb')
         self.classifier = pickle.load(f)
         f.close()
 
@@ -25,7 +25,6 @@ class IngredientPredict:
             return text
 
     def predict_new(self,text):
-
         text = text.lower()
         text = re.sub(r'[,.!?()-+|]+', ' ', text)
         text = self.convert_decimal(text)
@@ -35,10 +34,23 @@ class IngredientPredict:
         for tag, ner in chunked:
             word, pos = tag
             if 'QUANTITY' in ner:
-                self.dict_['qty'].add(word)
+                self.dict_['qty'].append(word)
             elif 'FAC' in ner:
-                self.dict_['unit'].add(word)
+                self.dict_['unit'].append(word)
             elif 'PRODUCT' in ner:
                 self.dict_['name'].append(word)
+            else:
+                self.dict_["comment"].append(word)
 
         return self.dict_
+
+    def get_taggings(self, phrase):
+        dict = self.predict_new(phrase)
+        taggings = {}
+        name = " ".join(dict["name"])
+        comment = " ".join(dict["comment"])
+        taggings["qty"] = float(dict["qty"][0])
+        taggings["unit"] = str(dict["unit"][0])
+        taggings["name"] = name
+        taggings["comment"] = comment
+        return taggings
