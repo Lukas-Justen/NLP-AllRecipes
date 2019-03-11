@@ -30,7 +30,7 @@ conversion = int(input())
 
 
 
-print("\n\n\n\nTHE CURRENT RECIPE:")
+print("\n\nTHE CURRENT RECIPE:")
 
 scraper = RecipeScraper(url, "")
 recipe = scraper.get_recipe()

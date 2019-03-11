@@ -198,13 +198,15 @@ class Recipe(object):
 
     def scale(self, list_of_scalings):
         scalings_made = []
-        for scaling in list_of_scalings:
-            for ingredient in self.ingredients:
+        for ingredient in self.ingredients:
+            scaled = False
+            for scaling in list_of_scalings:
                 for match in scaling["ingredient"]:
-                    if self.simple_match(match, ingredient.name):
+                    if not scaled and self.simple_match(match, ingredient.name):
                         try:
                             ingredient.quantity *= scaling["scale"]
                             scalings_made.append(str(ingredient.name) + " by factor " + str(scaling["scale"]))
+                            scaled = True
                         except:
                             print("Couldn't scale "  + ingredient.name)
         return scalings_made
