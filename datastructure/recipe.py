@@ -25,6 +25,7 @@ class RecipeBuilder(object):
         self.protein = 0.0
         self.cholesterol = 0.0
         self.sodium = 0.0
+        self.cooking_action = ""
 
     def create_recipe(self):
         return Recipe(self.url,
@@ -41,12 +42,13 @@ class RecipeBuilder(object):
                       self.carbohydrates,
                       self.protein,
                       self.cholesterol,
-                      self.sodium)
+                      self.sodium,
+                      self.cooking_action)
 
 
 class Recipe(object):
 
-    def __init__(self, url,name, ingredients, prep_time, cook_time, total_time, servings_count, directions, breadcrumbs, calories, fat, carbohydrates, protein, cholesterol, sodium):
+    def __init__(self, url,name, ingredients, prep_time, cook_time, total_time, servings_count, directions, breadcrumbs, calories, fat, carbohydrates, protein, cholesterol, sodium, cooking_action):
         self.url = url
         self.name = name
         self.ingredients = ingredients
@@ -62,6 +64,7 @@ class Recipe(object):
         self.protein = protein
         self.cholesterol = cholesterol
         self.sodium = sodium
+        self.cook_action = cooking_action
 
     def __str__(self):
         table_ingredients = []
@@ -77,6 +80,7 @@ class Recipe(object):
             table_phrases.append([counter, direction.phrase])
             counter += 1
         return "Recipe Name: " + str(self.name)+ "\n" \
+               "Main Action: " + str(self.cook_action) + "\n" \
                "Url        : " + str(self.url) + "\n\n" \
                "Breadcrumbs: " + str(self.breadcrumbs) + "\n\n" \
                "Prep-Time  : " + str(self.prep_time) + "\n" \

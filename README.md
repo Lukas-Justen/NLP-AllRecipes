@@ -19,6 +19,7 @@ Afterwards, the program will ask you for a recipe from www.allrecipes.com. Just 
     - Nutrition Facts
     - Cooking Times
     - Servings Count
+    - Main Cooking Action
 - Ingredients
     - Quantity
     - Unit
@@ -27,11 +28,11 @@ Afterwards, the program will ask you for a recipe from www.allrecipes.com. Just 
 - Directions
     - Times
     - Temperatures
-    - Cooking actions
+    - Cooking Actions
     - Ingredients
     - Tools
     
-**INGREDIENTS:** In order to parse the ingredients into quantity, unit, name and descriptor we tried four different approaches. First, we found this https://github.com/nytimes/ingredient-phrase-tagger github repository built by the New York Times. They were using a crf++ model that was trained on 180k training phrases that were labeled by humans. Originally we took that model file and used it to parse the ingredients into the internal representation. However, since the project guidelines suggested to not use an external model but build your own model we tried to train our own model using the same training data. We achieved this by applying named entity recognition to the phrases. The problem with that approach was that we got a rather bad performance on the ingredient names itself. Nevertheless, for the conversions at the end of the project we needed a good internal representation of the ingredient names in ordre to be able to make replacements. Thus we choose our final approach that takes the labeled training data and searches for the known ingredients, units or descriptors. This approach gave us a perfect performance on the ingredients names and also a good performance on the quantity, the units and the ingredient descriptors.
+**INGREDIENTS:** In order to parse the ingredients into quantity, unit, name and descriptor we tried many different approaches. First, we found this https://github.com/nytimes/ingredient-phrase-tagger github repository built by the New York Times. They were using a crf++ model that was trained on 180k training phrases that were labeled by humans. Originally we took that model file and used it to parse the ingredients into the internal representation. However, since the project guidelines suggested to not use an external model but build your own model we tried to train our own model using the same training data. We achieved this by applying named entity recognition to the phrases. The problem with that approach was that we got a rather bad performance on the ingredient names itself. Nevertheless, for the conversions at the end of the project we needed a good internal representation of the ingredient names in ordre to be able to make replacements. Thus, we tried to improve the training data and the model itself so that it puts a higher focus on the ingredient name itself.
 
 **DIRECTIONS:** A direction usually consists of an action and an ingredient. Additionally, a direction can also contain information like cooking temperature or time and which tools are required to fulfil that step. To get this kind of information we are using lists of all known tools, actions and ingredients that can be used to cook something. A simple string comparison helps us to identify everything within a direction phrase. To get the time and the temperature of the direction we built a regex that finds patterns that match how people express the cooking time or temperature.
 

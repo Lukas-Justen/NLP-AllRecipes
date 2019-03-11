@@ -37,6 +37,7 @@ class RecipeScraper(object):
             builder.protein = self.get_nutrition("proteinContent", "g")
             builder.cholesterol = self.get_nutrition("cholesterolContent", "mg")
             builder.sodium = self.get_nutrition("sodiumContent", "mg")
+            builder.cooking_action = self.find_main_action(builder.directions)
             self.recipe = builder.create_recipe()
         return self.recipe
 
@@ -92,3 +93,34 @@ class RecipeScraper(object):
         except:
             print("Error: Could not read " + name + " from recipe.")
         return {"value": value, "unit": unit}
+
+    def find_main_action(self, directions):
+        longest_action = ""
+        try:
+            main_actions = ["broil", "boil", "bake", "grill", "stir", "simmer", "stew", "fry", "roast", "steam"]
+            longest_time = 0.0
+            time_directions = [d for d in directions if d.time]
+            for d in time_directions:
+                current_time = float(str(re.match(r'\d+', d.time).group(0)))
+                if current_time > longest_time:
+                    for a in d.actions:
+                        for m in main_actions:
+                            if a == m:
+                                longest_time = current_time
+                                longest_action = d.actions[0]
+
+            if longest_action == "":
+                for d in directions:
+                    for a in d.actions:
+                        for m in main_actions:
+                            if a == m:
+                                longest_action = d.actions[0]
+
+            if longest_action == "":
+                longest_action = "heat"
+
+        except:
+            print("Couldn't read main cooking action")
+            
+        return longest_action
+
