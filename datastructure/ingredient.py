@@ -161,7 +161,7 @@ class IngredientParser:
         for ingredient in self.ingredients_list:
             if ingredient in phrase:
                 return phrase, str(ingredient).strip()
-        return phrase, None
+        return phrase, "Nothing found"
 
     def get_comments(self, phrase):
         comments = []

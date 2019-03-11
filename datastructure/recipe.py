@@ -152,7 +152,6 @@ class Recipe(object):
                            for word in list_descriptor:
                                ingredient.phrase = str(ingredient.phrase).replace(' '.join(word),'')
 
-                        ingredient.descriptor = None
                         ingredient.phrase = str(ingredient.phrase).replace(ingredient.name, replace_with)
 
                         self.replace_direction(ingredient.name, replace_with)

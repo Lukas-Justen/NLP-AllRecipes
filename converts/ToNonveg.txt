@@ -12,3 +12,4 @@ cauliflower, veggieburger > ground beef
 brussels sprouts > sliced pork belly
 %fruits% > chicken
 oil > bacon fat
+salt > bacon salt
