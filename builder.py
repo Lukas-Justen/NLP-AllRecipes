@@ -2,6 +2,8 @@ from datastructure.resources import variables, database
 from scraper.recipescraper import RecipeScraper
 from scraper.seleniumscraper import SeleniumScraper
 
+from tagging.ingredient_train import *
+
 
 def scrape_category(category_url, category_name):
     scraper = SeleniumScraper(category_url)
@@ -9,15 +11,15 @@ def scrape_category(category_url, category_name):
     urls = scraper.get_urls_to_be_scraped()
 
     for u in urls:
-        try:
-            scraper = RecipeScraper(u, category_name)
-            recipe = scraper.get_recipe()
-            if not "Desserts" in recipe.breadcrumbs:
-                database.insert_recipe(recipe)
-            print("Scraped :   " + u)
-        except Exception as e:
-            # print(e)
-            print("Unable  :   " + u)
+        # try:
+        scraper = RecipeScraper(u, category_name)
+        recipe = scraper.get_recipe()
+        if not "Desserts" in recipe.breadcrumbs:
+            database.insert_recipe(recipe)
+        print("Scraped :   " + u)
+        # except Exception as e:
+        #     # print(e)
+        #     print("Unable  :   " + u)
 
 
 def get_ingredient_type(ingredient, variables):
@@ -45,17 +47,8 @@ def count_ingredients(recipes):
         counter[key] = {k: counter[key][k] for k in sorted(counter[key], key=counter[key].get, reverse=True)}
     return counter
 
-category = "German"
-# url = "https://www.allrecipes.com/recipes/722/world-cuisine/european/german/"
-#
+category = "Chinese"
+# url = "https://www.allrecipes.com/recipes/695/world-cuisine/asian/chinese/"
 # scrape_category(url, category)
 recipes = database.find_recipes(category)
 counter = count_ingredients(recipes)
-
-counter
-
-# url = "https://www.allrecipes.com/recipe/20068/"
-# scraper = RecipeScraper(url, "German")
-# recipe = scraper.get_recipe()
-# database.insert_recipe(recipe)
-# recipe
