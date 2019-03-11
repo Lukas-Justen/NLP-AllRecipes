@@ -107,20 +107,20 @@ class RecipeScraper(object):
                         for m in main_actions:
                             if a == m:
                                 longest_time = current_time
-                                longest_action = d.actions[0]
+                                longest_action = a
 
             if longest_action == "":
                 for d in directions:
                     for a in d.actions:
                         for m in main_actions:
                             if a == m:
-                                longest_action = d.actions[0]
+                                longest_action = a
 
             if longest_action == "":
                 longest_action = "heat"
 
         except:
             print("Couldn't read main cooking action")
-            
+
         return longest_action
 

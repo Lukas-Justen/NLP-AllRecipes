@@ -30,7 +30,7 @@ conversion = int(input())
 
 
 
-print("\n\n\n\nTHE CURRENT RECIPE:")
+print("\n\nTHE CURRENT RECIPE:")
 
 scraper = RecipeScraper(url, "")
 recipe = scraper.get_recipe()
@@ -40,7 +40,7 @@ print(recipe)
 
 
 print("\n\n\n\nTHE NEW RECIPE:")
-replacements, additions = recipe.convert(conv[conversion], variables=variables)
+replacements, additions, scalings = recipe.convert(conv[conversion], variables=variables)
 
 print(recipe)
 
@@ -59,3 +59,10 @@ if len(additions) > 0:
         print(a)
 else:
     print("\nNO ADDITIONS MADE")
+
+if len(scalings) > 0:
+    print("\nSCALINGS MADE:")
+    for s in scalings:
+        print(s)
+else:
+    print("\nNO SCALINGS MADE")

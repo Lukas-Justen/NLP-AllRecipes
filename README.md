@@ -5,7 +5,11 @@ In order to make sure that our code runs properly you will need to install all f
  - conda install dnspython
  - conda install pymongo
  - conda install tabulate
- -
+ - conda install beautifulsoup4
+ - conda install requests
+ - conda install selenium
+ - conda install nltk
+ - conda install pandas
  
 #### 2. Running the Code
 In order to run the code you will need to call the pipeline python script:
@@ -47,14 +51,14 @@ Furthermore, the program will offer you some conversions which you can apply to 
 6:   To German   
 7:   To Chinese 
 
-In order to make these conversions as complex as possible but also applicable to any kind of recipe we introduced special scripts. These scripts can either _REPLACE_ or _ADD_ ingredients to the recipe. During the development time we were also thinking about a _SCALING_ feature that would allow you to scale the quantity of certain ingredients by a given factor. However, since we have not been using this feature exessively we decided to focus on the _REPLACE_ and _ADD_ instructions. You can find the described scripts in the ```converts``` directory of this repository. 
+In order to make these conversions as complex as possible but also applicable to any kind of recipe we introduced special scripts. These scripts can either _REPLACE_, _ADD_ or _SCALE_ ingredients of the recipe. During the development time we were first thinking that we don't need a _SCALING_ feature that would allow you to scale the quantity of certain ingredients by a given factor. However, since we realized that such a functionality is really helpful for making a recipe healthier or unhealthier. You can find the described scripts in the ```converts``` directory of this repository. 
 
-**REPLACE:** If you take a look at the ```ToIndian.txt``` file you can recognize that it consists of a _REPLACE_ section. This section contains replacement steps in each line. The ingredients on the left hand side of the ```>``` symbol will be replaced with the ingredients on the right hand side. Our code will randomly pick an ingredient from the right side and replace it with the ingredient on the left side. Since we found that this is a rather stupid approach we tried to split each replacement in small replacement steps that make sense. For example, if you want to replace a sweet and sour fruit you should also pick something that is sweet and sour on the right side. 
-
-To make these scripts even more powerful we introduced the concept of ingredient variables. An example for such a variable would be the %meats% variable in the ```ToIndian.txt``` file. The line ```%meats% > lamb, chicken, goat``` will replace any kind of meet with lamb, chicken or goat. Our program will fetch all meats from our MongoDB and replace that variable with a properly formatted string that matches all meats.
+**REPLACE:** If you take a look at the ```ToIndian.txt``` file you can recognize that it consists of a _REPLACE_ section. This section contains replacement steps in each line. The ingredients on the left hand side of the ```>``` symbol will be replaced with the ingredients on the right hand side. Our code will randomly pick an ingredient from the right side and replace it with the ingredient on the left side. Since we found that this is a rather stupid approach we tried to split each replacement in small replacement steps that make sense. For example, if you want to replace a sweet and sour fruit you should also pick something that is sweet and sour on the right side.  To make these scripts even more powerful we introduced the concept of ingredient variables. An example for such a variable would be the %meats% variable in the ```ToIndian.txt``` file. The line ```%meats% > lamb, chicken, goat``` will replace any kind of meet with lamb, chicken or goat. Our program will fetch all meats from our MongoDB and replace that variable with a properly formatted string that matches all meats.
 
 **ADD:** Some cuisines, dishes or conversions require the addition of ingredients. A perfect example for this would be the Indian cuisine. While we would be able to replace spices and herbs with Indian spices and herbs the cuisine requires us to add even more spices and herbs than other cuisines would usually use. Therefore, we built an _ADD_ instruction. This _ADD_ section can be found at the end of the ```ToIndian.txt``` file. Here we can spcify which ingredients should be added to the recipe. Moreover, we can define the quantity and the unit to be added to the recipe. The hardest part in that case was finding a proper place to add these ingredients within the directions. Therefore, we also need to specify to what actions the program can add the new ingredients. All in all, the line ```
 coriander powder > season, mix > 0.5 > tablespoon``` means that the program should add a half tablespoon of coriander powder to a seasoning or mixing direction per serving.
+
+**SCALE:** We realized that we need a scaling functionality for the conversion to healthy and to unhealthy. The _SCALE_ instruction allows you to scale everything that is on the left hand side by the factor on the right hand side of the ```>``` symbol. 
 
 #### 4. Future Outlook
 To show you how all of these components could be working together we want to give you a brief outlook. Although our converter is already able to convert recipes to the Indian, the German or the Chinese cuisine we want to expand that conversion to any kind of cuisine or cooking style. Here is where our Selenium Scraper comes in. Since we can scrape hundreds of recipes we can analyze the relation between each ingredient and why they are part of the recipe. We could build and train a machine learning model based on the scraping data and apply that model to any kind of recipe. The result of the model could be a new conversion script like we were already using. All in all, we think that we can use the semantic representation our program created to introduce statistical machine learning into the project. That would help us to make the program scalable and applicable to any kind of cuisine. While we were focusing on a "depth"-approach that tries to perfectly convert a recipe into a new recipe the future would be to increase the range of cuisines. Therefore, we think that our project was a full success!
