@@ -123,7 +123,7 @@ class Recipe(object):
                     measurement = str(parts[3]).strip()
                     template["ADD"].append({"add": to_add, "where": where, "quantity": quantity,"measurement": measurement})
                 else:
-                    ingredient = str(parts[0]).strip()
+                    ingredient = str(parts[0]).strip().split(", ")
                     scale = float(str(parts[1]).strip())
                     template["SCALE"].append({"ingredient":ingredient, "scale":scale})
         replacements_made = self.replace(template["REPLACE"])
@@ -200,12 +200,13 @@ class Recipe(object):
         scalings_made = []
         for scaling in list_of_scalings:
             for ingredient in self.ingredients:
-                if self.simple_match(scaling["ingredient"], ingredient.name):
-                    try:
-                        ingredient.quantity *= scaling["scale"]
-                        scalings_made.append(ingredient.name + " by factor " + scaling["scale"])
-                    except:
-                        print("Couldn't scale "  + ingredient.name)
+                for match in scaling["ingredient"]:
+                    if self.simple_match(match, ingredient.name):
+                        try:
+                            ingredient.quantity *= scaling["scale"]
+                            scalings_made.append(str(ingredient.name) + " by factor " + str(scaling["scale"]))
+                        except:
+                            print("Couldn't scale "  + ingredient.name)
         return scalings_made
 
 
