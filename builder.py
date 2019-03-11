@@ -48,16 +48,7 @@ def count_ingredients(recipes):
     return counter
 
 category = "Chinese"
-url = "https://www.allrecipes.com/recipes/695/world-cuisine/asian/chinese/"
-
-scrape_category(url, category)
+# url = "https://www.allrecipes.com/recipes/695/world-cuisine/asian/chinese/"
+# scrape_category(url, category)
 recipes = database.find_recipes(category)
 counter = count_ingredients(recipes)
-
-counter
-
-# url = "https://www.allrecipes.com/recipe/20068/"
-# scraper = RecipeScraper(url, "German")
-# recipe = scraper.get_recipe()
-# database.insert_recipe(recipe)
-# recipe
