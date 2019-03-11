@@ -128,8 +128,8 @@ class Recipe(object):
                     template["SCALE"].append({"ingredient":ingredient, "scale":scale})
         replacements_made = self.replace(template["REPLACE"])
         additions_made = self.add(template["ADD"])
-        self.scale(template["SCALE"])
-        return (replacements_made, additions_made)
+        scalings_made = self.scale(template["SCALE"])
+        return (replacements_made, additions_made, scalings_made)
 
     def insert_variables(self, line, variables):
         matches = re.findall(r'%(?P<variable_name>\w+)%',line)
@@ -197,7 +197,16 @@ class Recipe(object):
         return additions_made
 
     def scale(self, list_of_scalings):
-        pass
+        scalings_made = []
+        for scaling in list_of_scalings:
+            for ingredient in self.ingredients:
+                if self.simple_match(scaling["ingredient"], ingredient.name):
+                    try:
+                        ingredient.quantity *= scaling["scale"]
+                        scalings_made.append(ingredient.name + " by factor " + scaling["scale"])
+                    except:
+                        print("Couldn't scale "  + ingredient.name)
+        return scalings_made
 
 
 
