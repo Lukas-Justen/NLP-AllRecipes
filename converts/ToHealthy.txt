@@ -13,9 +13,11 @@ pork belly > pork
 mayonnaise > light mayonnaise
 salad dressing > balsamic vinegar
 orzo, rice > quinoa
+sugar > artificial sweetener
 *SCALE*
 oil, olive oil, sesame oil, canola oil, peanut oil, soybean oil > 0.5
 vegetable oil > 0.5
 salt > 0.5
 margarine > 0.5
 sauce > 0.5
+artificial sweetener > 0.5

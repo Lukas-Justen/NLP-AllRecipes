@@ -17,3 +17,4 @@ lard, pork fat > 2
 salt > 2
 %cheeses% > 2
 sauce > 2
+sugar > 2
