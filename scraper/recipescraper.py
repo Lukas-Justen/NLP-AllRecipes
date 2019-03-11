@@ -121,6 +121,6 @@ class RecipeScraper(object):
 
         except:
             print("Couldn't read main cooking action")
-            
+
         return longest_action
 
