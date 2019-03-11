@@ -1,0 +1,19 @@
+*REPLACE*
+%cheeses% > fennel, ginger, sichuan pepper, garlic
+oregano > green onion
+%meats% > pork, chicken, duck, beef
+%herbs% > ginger, sichuan pepper, anise, garlic, white pepper powder
+%vegetarian% > tofu
+pasta > vermicelli
+%fruits% > passion fruit, dragonfruit, asian pear
+olive oil > peanut oil, sesame oil
+sauce > hoisin sauce, oyster sauce
+salt > soy sauce, fish sauce, sesame oil
+vinegar > rice vinegar, rice wine
+spinach > bok choy, chinese cabbage
+hot sauce > sriracha
+couscous, quinoa, orzo > white rice
+chili paste > chili sambal
+beans, chickpeas > edamame
+peas > snow peas
+tortillas > dumpling skins

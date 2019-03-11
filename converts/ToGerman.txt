@@ -1,0 +1,34 @@
+*REPLACE*
+sausage > bratwurst, kielbasa sausage, pork sausage, bratwurst sausage, bratwurst, bratwurst
+bacon > ham
+yeast > beer
+wine > riesling, silvaner, red wine, huxelrebe
+kale > cabbage, red cabbage
+rice, wild rice > potatoes
+salt > onion salt
+oil > pork fat, canola oil, butter
+cream cheese > spundekaese
+gorgonzola, gorgonzola cheese > bergader cheese
+chicken broth > beer, beer, beer, beef broth
+lemon > white wine vinegar
+water > riesling
+tomatoes > german tomatoes
+tomato paste > vinegar
+ricotta cheese > cream cheese
+tomato sauce > vegetable broth
+turkey stock > chicken broth
+turkey liver > chicken liver
+italian seasoning > fresh parsley
+russet potatoes > potatoes
+%seafood% > smoked eel, salmon, forelle
+%meats% > veal, beef, pork, beef
+%poultry% > chicken
+%cheeses% > emmentaler cheese, swiss cheese, algauer cheese, limburger cheese, harzer cheese, gouda, ziegel cheese, whipping cream, cream cheese
+%noodles% > spaetzle, schupfnudeln, potato noodles, spaetzle, spaetzle
+%liquids% > riesling, silvaner, beef broth, red wine, tomato sauce, tomato paste
+%vegetables% > shallots, mushrooms, russet potatoes, onion, tomatoes, onions, sauerkraut, potatoes, cabbage, sauerkraut, celery, carrots, red cabbage, fennel, spinach, tomatoes, peas, celery root, red bell pepper, shallots, mushrooms
+sugar > white sugar
+lettuce > endive, corn salad
+%spices% > garlic, black pepper, parsley, nutmeg, cloves, caraway seeds, fennel seeds, bay leaves, onion powder, mustard, celery seeds, majoram
+%nuts% > walnuts, almonds, hazelnuts, beechnuts, chestnuts
+%fruits% > apples, cherries, pears, grapes, strawberries, raspberry, currants, raisins
